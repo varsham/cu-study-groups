@@ -1,0 +1,293 @@
+# CU Study Group Management System
+
+## Project Overview
+
+A study group management system for Columbia University students. Students submit study groups via Google Form, which syncs to Supabase. A React frontend displays available groups and allows students to join.
+
+## Tech Stack
+
+- **Database**: Supabase (PostgreSQL with RLS)
+- **Backend**: Supabase Edge Functions (Deno)
+- **Frontend**: React + TypeScript + Vite
+- **Email**: Resend API
+- **Form Integration**: Google Forms → Google Sheets → Google Apps Script webhook
+- **Hosting**: Supabase Hosting
+- **Testing**: Vitest
+
+## Google Form Field Mapping
+
+| Form Field | Database Column | Notes |
+|------------|-----------------|-------|
+| Email | `organizer_email` | Required, @columbia.edu validation |
+| Name | `organizer_name` | Optional (if empty, don't display) |
+| Study Group Subject | `subject` | Dropdown + "Other" option |
+| If Other, enter subject | `subject` | Override if "Other" selected |
+| Professor Name | `professor_name` | Optional |
+| Date | `start_time` (date part) | Required |
+| Location | `location` | Required |
+| Start Time | `start_time` (time part) | Required |
+| End Time | `end_time` | Required |
+| Student Limit | `student_limit` | Optional |
+
+## Key Decisions
+
+- **Authentication**: Magic link auth for organizers (email-based, no password)
+- **Timezones**: Store UTC, display in user's local timezone
+- **Real-time**: Supabase real-time subscriptions enabled
+- **Duplicate Groups**: Warn via email, but allow duplicates
+- **Anonymous Organizers**: If no name provided, just show date/time (no "Anonymous" label)
+- **Branding**: Generic Columbia (not SEAS-specific)
+
+---
+
+## Implementation Phases
+
+### Phase 1: Local Project Setup & Database Schema
+
+**Tasks:**
+1. Initialize project structure with uv
+2. Install Supabase CLI (`brew install supabase/tap/supabase`)
+3. Create Supabase project (web console)
+4. Write database migrations:
+   - `001_initial_schema.sql` - study_groups, participants tables
+   - `002_rls_policies.sql` - Row Level Security
+   - `003_functions_triggers.sql` - compute_expires_at, participant counting
+5. Write tests for schema validation
+
+**Deliverables:**
+- `/supabase/migrations/001_initial_schema.sql`
+- `/supabase/migrations/002_rls_policies.sql`
+- `/supabase/migrations/003_functions_triggers.sql`
+- `/supabase/config.toml`
+
+**Dependencies:** None
+
+---
+
+### Phase 2: Organizer Authentication
+
+**Tasks:**
+1. Design magic link auth flow (email-based, no password)
+2. Add `auth.users` integration for organizers
+3. Update RLS to allow organizers to delete their own groups
+4. Create auth Edge Function for organizer verification
+5. Write tests for auth flow
+
+**Deliverables:**
+- Updated migrations for auth integration
+- `/supabase/functions/verify-organizer/`
+
+**Dependencies:** Phase 1
+
+---
+
+### Phase 3: Google Apps Script Webhook
+
+**Tasks:**
+1. Write Apps Script code to POST form submissions to Supabase
+2. Handle subject dropdown + "Other" field logic
+3. Combine Date + Start Time into `start_time` timestamp
+4. Combine Date + End Time into `end_time` timestamp
+5. Add duplicate detection (query existing groups, send warning email if similar exists)
+6. Handle authentication (service role key)
+7. Test webhook with mock data
+
+**Deliverables:**
+- `/google-apps-script/webhook.gs`
+- `/google-apps-script/README.md` (setup instructions)
+
+**Dependencies:** Phase 1
+
+---
+
+### Phase 4: Email Notifications (Resend)
+
+**Tasks:**
+1. Create Resend account, get API key
+2. Write Edge Function: `send-join-confirmation` (to student joining)
+3. Write Edge Function: `send-organizer-notification` (to group organizer)
+4. Write Edge Function: `send-duplicate-warning` (when creating similar group)
+5. Design email templates (plain HTML, Columbia blue #003366)
+6. Write tests for email functions
+
+**Deliverables:**
+- `/supabase/functions/send-join-confirmation/`
+- `/supabase/functions/send-organizer-notification/`
+- `/supabase/functions/send-duplicate-warning/`
+
+**Dependencies:** Phase 1, Phase 2
+
+---
+
+### Phase 5: Cleanup Scheduled Function
+
+**Tasks:**
+1. Write cleanup Edge Function
+2. Configure pg_cron or Supabase cron for hourly execution
+3. Logic:
+   - Delete groups where `expires_at < now()` AND participant_count = 0
+   - Delete groups where `end_time < now()`
+4. Write tests
+
+**Deliverables:**
+- `/supabase/functions/cleanup-expired-groups/`
+- Cron configuration
+
+**Dependencies:** Phase 1
+
+---
+
+### Phase 6: Frontend Setup & Core Components
+
+**Tasks:**
+1. Initialize Vite + React + TypeScript project
+2. Configure Vitest for testing
+3. Set up Supabase client with TypeScript types (generated from schema)
+4. Implement timezone handling (store UTC, display local)
+5. Create base components:
+   - `StudyGroupCard.tsx` - displays group info, participant count, join button
+   - `SearchBar.tsx` - debounced search across subject/professor/location
+6. Write component tests
+
+**Deliverables:**
+- `/frontend/` project structure
+- `/frontend/src/lib/supabase.ts`
+- `/frontend/src/lib/timezone.ts`
+- `/frontend/src/components/StudyGroupCard.tsx`
+- `/frontend/src/components/SearchBar.tsx`
+- Component tests
+
+**Dependencies:** Phase 1
+
+---
+
+### Phase 7: Join Flow & Real-time
+
+**Tasks:**
+1. Create `JoinModal.tsx` component
+2. Email validation (@columbia.edu)
+3. Duplicate join prevention (unique constraint on study_group_id + email)
+4. Set up Supabase real-time subscriptions
+5. Live participant count updates without page refresh
+6. Write tests
+
+**Deliverables:**
+- `/frontend/src/components/JoinModal.tsx`
+- `/frontend/src/hooks/useRealtimeParticipants.ts`
+- Integration tests
+
+**Dependencies:** Phase 6
+
+---
+
+### Phase 8: Organizer Dashboard
+
+**Tasks:**
+1. Create organizer login page (magic link)
+2. Create "My Groups" view showing organizer's study groups
+3. Add delete functionality for own groups only
+4. Show full participant list (with emails) for organizers
+5. Write tests
+
+**Deliverables:**
+- `/frontend/src/pages/OrganizerDashboard.tsx`
+- `/frontend/src/components/OrganizerGroupCard.tsx`
+- `/frontend/src/contexts/AuthContext.tsx`
+- Auth hooks
+
+**Dependencies:** Phase 2, Phase 6
+
+---
+
+### Phase 9: HomePage & Styling
+
+**Tasks:**
+1. Create HomePage with responsive grid of study groups
+2. Implement mobile-first responsive layout
+3. Apply Columbia styling (#003366 blue, clean minimal design)
+4. Google Maps links for locations (Columbia campus search)
+5. Handle display when organizer_name is null (just show date/time)
+6. Time format: "3:00 PM – 5:00 PM"
+7. E2E tests
+
+**Deliverables:**
+- `/frontend/src/pages/HomePage.tsx`
+- `/frontend/src/styles/` or CSS-in-JS
+- E2E tests
+
+**Dependencies:** Phase 6, Phase 7
+
+---
+
+### Phase 10: Deployment & Documentation
+
+**Tasks:**
+1. Deploy Supabase migrations to production
+2. Deploy Edge Functions
+3. Build and deploy frontend to Supabase Hosting
+4. Configure environment variables in production
+5. Set up Google Apps Script trigger on form submission
+6. Write README with:
+   - Architecture diagram
+   - Setup instructions for each component
+   - Environment variable configuration
+   - Deployment steps
+   - Maintenance/troubleshooting guide
+
+**Deliverables:**
+- Production deployment
+- `/README.md`
+- `/.env.example`
+
+**Dependencies:** All previous phases
+
+---
+
+## Environment Variables
+
+```
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+RESEND_API_KEY=
+WEBHOOK_SECRET=  # optional, for additional webhook security
+```
+
+---
+
+## Database Schema Summary
+
+### study_groups
+- `id` (uuid, PK)
+- `subject` (text, required)
+- `professor_name` (text, nullable)
+- `location` (text, required)
+- `start_time` (timestamptz, required)
+- `end_time` (timestamptz, required)
+- `student_limit` (integer, nullable)
+- `organizer_name` (text, nullable)
+- `organizer_email` (text, required, @columbia.edu)
+- `created_at` (timestamptz, default now())
+- `expires_at` (timestamptz, computed: min(created_at + 24h, end_time))
+
+### participants
+- `id` (uuid, PK)
+- `study_group_id` (uuid, FK → study_groups, CASCADE delete)
+- `name` (text, required)
+- `email` (text, required, @columbia.edu)
+- `joined_at` (timestamptz, default now())
+- Unique constraint: (study_group_id, email)
+
+---
+
+## RLS Policies Summary
+
+### study_groups
+- SELECT: Public (anyone can view)
+- INSERT: Via webhook only (service role)
+- DELETE: Organizer only (authenticated, email matches organizer_email)
+
+### participants
+- SELECT: Public for names only; organizers can see emails for their groups
+- INSERT: Public (with @columbia.edu email validation)
+- DELETE: Cascade from study_groups
