@@ -30,8 +30,7 @@ This script connects your Google Form to Supabase, automatically creating study 
    ```javascript
    props.setProperties({
      'SUPABASE_URL': 'https://qmosxdzmvzfusgxhditg.supabase.co',
-     'SUPABASE_SERVICE_ROLE_KEY': 'your-actual-service-role-key',
-     'RESEND_API_KEY': 'your-resend-api-key'
+     'SUPABASE_SERVICE_ROLE_KEY': 'your-actual-service-role-key'
    });
    ```
 3. Run the `setScriptProperties()` function once:
@@ -39,6 +38,8 @@ This script connects your Google Form to Supabase, automatically creating study 
    - Select `setScriptProperties`
    - Click **Run**
    - Authorize the script when prompted
+
+**Note:** Duplicate warning emails are sent using Google's built-in GmailApp service, so no external email API key is needed.
 
 ### 4. Verify Column Mapping
 
@@ -114,9 +115,9 @@ The script expects these columns in order (adjust `COLUMNS` constant if differen
 - Verify your Supabase project is active
 
 ### Emails not sending
-- Verify the `RESEND_API_KEY` is correct
-- Check Resend dashboard for API errors
-- Free tier: emails can only be sent to the account owner's email
+- Authorize the script to send emails when prompted
+- Check the Apps Script execution log for errors
+- Gmail may block emails if sent too frequently
 
 ## Security Notes
 

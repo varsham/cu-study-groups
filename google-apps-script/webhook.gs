@@ -36,8 +36,7 @@ function setScriptProperties() {
   // IMPORTANT: Replace these with your actual values
   props.setProperties({
     'SUPABASE_URL': 'https://qmosxdzmvzfusgxhditg.supabase.co',
-    'SUPABASE_SERVICE_ROLE_KEY': 'YOUR_SERVICE_ROLE_KEY_HERE',
-    'RESEND_API_KEY': 'YOUR_RESEND_API_KEY_HERE'
+    'SUPABASE_SERVICE_ROLE_KEY': 'YOUR_SERVICE_ROLE_KEY_HERE'
   });
 
   Logger.log('Script properties set successfully');
@@ -254,19 +253,12 @@ function checkForDuplicates(formData) {
 }
 
 /**
- * Send a warning email about duplicate study groups.
+ * Send a warning email about duplicate study groups using Gmail.
+ * Uses the built-in GmailApp service - no external API needed.
  * @param {Object} formData - The new study group data
  * @param {Array} duplicates - Array of similar existing study groups
  */
 function sendDuplicateWarningEmail(formData, duplicates) {
-  const props = PropertiesService.getScriptProperties();
-  const resendApiKey = props.getProperty('RESEND_API_KEY');
-
-  if (!resendApiKey || resendApiKey === 'YOUR_RESEND_API_KEY_HERE') {
-    Logger.log('Resend API key not configured, skipping duplicate warning email');
-    return;
-  }
-
   // Format duplicate info
   const duplicateList = duplicates.map(d => {
     const startTime = new Date(d.start_time);
@@ -285,30 +277,20 @@ function sendDuplicateWarningEmail(formData, duplicates) {
     </div>
   `;
 
-  const url = 'https://api.resend.com/emails';
-
-  const options = {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + resendApiKey,
-      'Content-Type': 'application/json'
-    },
-    payload: JSON.stringify({
-      from: 'CU Study Groups <noreply@resend.dev>',
-      to: [formData.organizer_email],
-      subject: 'Similar Study Groups Found - ' + formData.subject,
-      html: emailHtml
-    }),
-    muteHttpExceptions: true
-  };
-
-  const response = UrlFetchApp.fetch(url, options);
-  const statusCode = response.getResponseCode();
-
-  if (statusCode !== 200) {
-    Logger.log('Failed to send duplicate warning email: ' + response.getContentText());
-  } else {
+  try {
+    GmailApp.sendEmail(
+      formData.organizer_email,
+      'Similar Study Groups Found - ' + formData.subject,
+      // Plain text fallback
+      `Similar study groups found:\n${duplicateList}\n\nYour study group for ${formData.subject} has still been created.`,
+      {
+        htmlBody: emailHtml,
+        name: 'CU Study Groups'
+      }
+    );
     Logger.log('Duplicate warning email sent to ' + formData.organizer_email);
+  } catch (error) {
+    Logger.log('Failed to send duplicate warning email: ' + error.message);
   }
 }
 
