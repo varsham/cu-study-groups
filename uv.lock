@@ -181,6 +181,7 @@ name = "cu-study-group"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "httpx" },
     { name = "python-dotenv" },
 ]
 
@@ -193,7 +194,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "python-dotenv", specifier = ">=1.2.1" }]
+requires-dist = [
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "python-dotenv", specifier = ">=1.2.1" },
+]
 
 [package.metadata.requires-dev]
 dev = [
