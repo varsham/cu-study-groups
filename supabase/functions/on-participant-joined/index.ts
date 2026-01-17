@@ -1,16 +1,19 @@
 // ABOUTME: Edge Function triggered when a participant joins a study group
-// ABOUTME: Sends confirmation to participant and notification to organizer
+// ABOUTME: Sends confirmation to participant and notification to organizer via Gmail SMTP
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const GMAIL_USER = Deno.env.get("GMAIL_USER");
+const GMAIL_APP_PASSWORD = Deno.env.get("GMAIL_APP_PASSWORD");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 interface JoinPayload {
@@ -20,27 +23,32 @@ interface JoinPayload {
   study_group_id: string;
 }
 
-async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
+async function sendEmail(
+  to: string,
+  subject: string,
+  html: string,
+): Promise<boolean> {
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
+    const client = new SMTPClient({
+      connection: {
+        hostname: "smtp.gmail.com",
+        port: 465,
+        tls: true,
+        auth: {
+          username: GMAIL_USER!,
+          password: GMAIL_APP_PASSWORD!,
+        },
       },
-      body: JSON.stringify({
-        from: "CU Study Groups <noreply@resend.dev>",
-        to: [to],
-        subject,
-        html,
-      }),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      console.error("Resend error:", error);
-      return false;
-    }
+    await client.send({
+      from: `CU Study Groups <${GMAIL_USER}>`,
+      to: to,
+      subject: subject,
+      html: html,
+    });
+
+    await client.close();
     return true;
   } catch (error) {
     console.error("Email send error:", error);
@@ -73,10 +81,17 @@ serve(async (req: Request) => {
   try {
     const payload: JoinPayload = await req.json();
 
-    if (!payload.study_group_id || !payload.participant_email || !payload.participant_name) {
+    if (
+      !payload.study_group_id ||
+      !payload.participant_email ||
+      !payload.participant_name
+    ) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
       );
     }
 
@@ -91,15 +106,16 @@ serve(async (req: Request) => {
       .single();
 
     if (fetchError || !studyGroup) {
-      return new Response(
-        JSON.stringify({ error: "Study group not found" }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Study group not found" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Get participant count
-    const { data: countResult } = await supabase
-      .rpc("get_participant_count", { p_study_group_id: payload.study_group_id });
+    const { data: countResult } = await supabase.rpc("get_participant_count", {
+      p_study_group_id: payload.study_group_id,
+    });
     const participantCount = countResult || 0;
 
     // Format times
@@ -111,7 +127,7 @@ serve(async (req: Request) => {
 
     // Google Maps link
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      studyGroup.location + " Columbia University New York"
+      studyGroup.location + " Columbia University New York",
     )}`;
 
     // Capacity info
@@ -151,7 +167,7 @@ serve(async (req: Request) => {
     const participantEmailSent = await sendEmail(
       payload.participant_email,
       `You joined: ${studyGroup.subject} Study Group`,
-      participantEmailHtml
+      participantEmailHtml,
     );
 
     // Send notification to organizer
@@ -185,7 +201,7 @@ serve(async (req: Request) => {
     const organizerEmailSent = await sendEmail(
       studyGroup.organizer_email,
       `${payload.participant_name} joined your ${studyGroup.subject} study group`,
-      organizerEmailHtml
+      organizerEmailHtml,
     );
 
     return new Response(
@@ -194,13 +210,16 @@ serve(async (req: Request) => {
         participantEmailSent,
         organizerEmailSent,
       }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
     );
   } catch (error) {
     console.error("Error:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
