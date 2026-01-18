@@ -83,11 +83,57 @@ See `google-apps-script/README.md` for detailed instructions.
 
 ### 4. Email Notifications
 
+There are two email configurations needed:
+
+#### A. Edge Functions (Join Notifications, Reminders)
+
 Configure Gmail SMTP in Supabase Edge Function secrets:
 ```bash
-npx supabase secrets set GMAIL_USER=your-email@columbia.edu
+npx supabase secrets set GMAIL_USER=your-email@gmail.com
 npx supabase secrets set GMAIL_APP_PASSWORD=your-app-password
 ```
+
+#### B. Auth Emails (Magic Links)
+
+Configure SMTP in Supabase Dashboard for magic link authentication:
+
+1. Go to **https://supabase.com/dashboard/project/YOUR_PROJECT_REF/auth/smtp**
+2. Enable **Custom SMTP**
+3. Enter these settings:
+
+| Setting | Value |
+|---------|-------|
+| Host | `smtp.gmail.com` |
+| Port | `587` |
+| User | `your-email@gmail.com` (full email address) |
+| Password | Your Gmail App Password (see below) |
+| Sender email | `your-email@gmail.com` |
+| Sender name | `CU Study Groups` |
+
+#### Creating a Gmail App Password
+
+Gmail requires an "App Password" for SMTP access (your regular password won't work):
+
+1. **Enable 2-Step Verification** (required first):
+   - Go to https://myaccount.google.com/security
+   - Enable "2-Step Verification" if not already enabled
+
+2. **Create App Password**:
+   - Go to https://myaccount.google.com/apppasswords
+   - Click "Create a new app password"
+   - Name it "Supabase" or "CU Study Groups"
+   - Click "Create"
+   - Copy the 16-character password (e.g., `xxxx xxxx xxxx xxxx`)
+
+3. **Use in Supabase**:
+   - Paste the password **without spaces** (e.g., `xxxxyyyyzzzzwwww`)
+   - Use your full email as the username
+
+**Troubleshooting "Username and password not accepted"**:
+- Ensure you're using an App Password, not your regular Gmail password
+- Remove any spaces from the App Password
+- Verify 2-Step Verification is enabled on the Google account
+- Make sure the email is a Google/Gmail account (some university emails use different providers)
 
 ## Deployment
 
