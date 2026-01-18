@@ -120,10 +120,10 @@ export function GroupPage() {
     );
     if (!confirmed) return;
 
-    // Find current user's name from participants list
-    const currentParticipant = participants.find(
-      (p) => p.email.toLowerCase() === effectiveEmail.toLowerCase(),
-    );
+    // Email notifications disabled - would need currentParticipant for name
+    // const currentParticipant = participants.find(
+    //   (p) => p.email.toLowerCase() === effectiveEmail.toLowerCase(),
+    // );
 
     setIsLeaving(true);
     try {

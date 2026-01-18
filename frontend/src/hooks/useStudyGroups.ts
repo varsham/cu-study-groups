@@ -85,7 +85,7 @@ export function useStudyGroups(searchQuery: string = ""): UseStudyGroupsResult {
         name,
         email,
       };
-      const { data: insertedParticipant, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from("participants")
         .insert(participant)
         .select()
