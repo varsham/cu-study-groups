@@ -1,0 +1,67 @@
+/* ABOUTME: Styles for the SearchBar component with Columbia University theming. */
+/* ABOUTME: Provides a clean search input with icon and proper focus states. */
+
+.search-bar {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-bar__input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-bar__input:focus {
+  outline: none;
+  border-color: #003366;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+}
+
+.search-bar__input::placeholder {
+  color: #999;
+}
+
+.search-bar__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: #666;
+  pointer-events: none;
+}
+
+.search-bar__clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.search-bar__clear:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.search-bar__clear:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.3);
+}

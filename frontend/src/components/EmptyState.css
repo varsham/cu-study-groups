@@ -1,0 +1,51 @@
+/* ABOUTME: Styles for the EmptyState component. */
+/* ABOUTME: Provides friendly empty state display with optional action. */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.empty-state__icon {
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.empty-state__title {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.empty-state__description {
+  margin: 0 0 24px 0;
+  font-size: 0.9375rem;
+  color: #666;
+  max-width: 300px;
+}
+
+.empty-state__action {
+  padding: 12px 24px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: #003366;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.empty-state__action:hover {
+  background-color: #002244;
+}
+
+.empty-state__action:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.3);
+}

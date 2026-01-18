@@ -1,0 +1,21 @@
+/* ABOUTME: Styles for the DashboardPage component. */
+/* ABOUTME: Provides centered layout for login and dashboard. */
+
+.dashboard-page {
+  min-height: calc(100vh - 64px);
+  background-color: #f8f9fa;
+  padding: 32px 24px;
+}
+
+.dashboard-page__loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+@media (max-width: 600px) {
+  .dashboard-page {
+    padding: 24px 16px;
+  }
+}

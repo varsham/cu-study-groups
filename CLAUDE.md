@@ -8,11 +8,11 @@ A study group management system for Columbia University students. Students submi
 
 - **Database**: Supabase (PostgreSQL with RLS)
 - **Backend**: Supabase Edge Functions (Deno)
-- **Frontend**: React + TypeScript + Vite
-- **Email**: Resend API
-- **Form Integration**: Google Forms → Google Sheets → Google Apps Script webhook
+- **Frontend**: React 19 + TypeScript + Vite
+- **Email**: Gmail SMTP (via Edge Functions and Apps Script)
+- **Form Integration**: Google Forms → Google Apps Script webhook
 - **Hosting**: Supabase Hosting
-- **Testing**: Vitest
+- **Testing**: Vitest (frontend), pytest (backend)
 
 ## Google Form Field Mapping
 
@@ -291,3 +291,42 @@ WEBHOOK_SECRET=  # optional, for additional webhook security
 - SELECT: Public for names only; organizers can see emails for their groups
 - INSERT: Public (with @columbia.edu email validation)
 - DELETE: Cascade from study_groups
+
+---
+
+## Implementation Status
+
+All phases completed:
+
+| Phase | Status | Description |
+|-------|--------|-------------|
+| 1 | Complete | Database schema, migrations, RLS policies |
+| 2 | Complete | Organizer authentication helper functions |
+| 3 | Complete | Google Apps Script webhook |
+| 4 | Complete | Email notifications (Gmail SMTP) |
+| 5 | Complete | Cleanup scheduled function (pg_cron) |
+| 6 | Complete | Frontend setup (React, Vite, TypeScript) |
+| 7 | Complete | Join flow with real-time subscriptions |
+| 8 | Complete | Organizer dashboard with magic link auth |
+| 9 | Complete | HomePage, routing, global styles |
+| 10 | Complete | Build verification, documentation |
+
+### Test Coverage
+
+- **Backend (pytest)**: 29 tests
+- **Frontend (vitest)**: 150 tests
+- **Total**: 179 tests passing
+
+### Key Files
+
+**Frontend**:
+- `frontend/src/pages/HomePage.tsx` - Main study group listing
+- `frontend/src/pages/DashboardPage.tsx` - Organizer login/dashboard
+- `frontend/src/components/` - Reusable UI components
+- `frontend/src/hooks/useStudyGroups.ts` - Real-time data fetching
+- `frontend/src/contexts/AuthContext.tsx` - Magic link authentication
+
+**Backend**:
+- `supabase/migrations/` - Database schema
+- `supabase/functions/on-participant-joined/` - Email notifications
+- `google-apps-script/webhook.gs` - Form submission handler

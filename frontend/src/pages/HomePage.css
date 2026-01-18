@@ -1,0 +1,101 @@
+/* ABOUTME: Styles for the HomePage component. */
+/* ABOUTME: Provides hero section, search, and responsive grid layout. */
+
+.home-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.home-page__hero {
+  background: linear-gradient(135deg, #003366 0%, #001a33 100%);
+  color: #fff;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.home-page__title {
+  margin: 0 0 12px 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.home-page__subtitle {
+  margin: 0;
+  font-size: 1.125rem;
+  opacity: 0.9;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-page__search {
+  max-width: 600px;
+  margin: -24px auto 0;
+  padding: 0 24px;
+  position: relative;
+  z-index: 10;
+}
+
+.home-page__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.home-page__loading {
+  display: flex;
+  justify-content: center;
+  padding: 64px 0;
+}
+
+.home-page__error {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.home-page__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.home-page__count {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #666;
+}
+
+.home-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .home-page__hero {
+    padding: 32px 16px;
+  }
+
+  .home-page__title {
+    font-size: 1.75rem;
+  }
+
+  .home-page__subtitle {
+    font-size: 1rem;
+  }
+
+  .home-page__search {
+    margin-top: -20px;
+    padding: 0 16px;
+  }
+
+  .home-page__content {
+    padding: 24px 16px;
+  }
+
+  .home-page__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

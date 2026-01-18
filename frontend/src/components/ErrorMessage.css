@@ -1,0 +1,55 @@
+/* ABOUTME: Styles for the ErrorMessage component. */
+/* ABOUTME: Provides error alert styling with retry button. */
+
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 12px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.error-message__content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.error-message__icon {
+  flex-shrink: 0;
+  color: #d32f2f;
+}
+
+.error-message__text {
+  margin: 0;
+  color: #c62828;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.error-message__retry {
+  padding: 10px 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #d32f2f;
+  background-color: #fff;
+  border: 1px solid #d32f2f;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.error-message__retry:hover {
+  background-color: #d32f2f;
+  color: #fff;
+}
+
+.error-message__retry:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.3);
+}

@@ -1,0 +1,185 @@
+/* ABOUTME: Styles for the JoinModal component with Columbia University theming. */
+/* ABOUTME: Provides modal overlay, form styling, and validation error states. */
+
+.join-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.join-modal {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.2s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.join-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.join-modal__close:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.join-modal__close:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.3);
+}
+
+.join-modal__title {
+  margin: 0 0 4px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #003366;
+}
+
+.join-modal__subtitle {
+  margin: 0 0 24px 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+.join-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.join-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.join-modal__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.join-modal__input {
+  padding: 12px 14px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.join-modal__input:focus {
+  outline: none;
+  border-color: #003366;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+}
+
+.join-modal__input.error {
+  border-color: #d32f2f;
+}
+
+.join-modal__input.error:focus {
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+}
+
+.join-modal__input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.join-modal__input::placeholder {
+  color: #999;
+}
+
+.join-modal__error {
+  font-size: 0.8125rem;
+  color: #d32f2f;
+  margin: 0;
+}
+
+.join-modal__error--submit {
+  padding: 12px;
+  background-color: #ffebee;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.join-modal__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.join-modal__button {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.join-modal__button--cancel {
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  color: #666;
+}
+
+.join-modal__button--cancel:hover:not(:disabled) {
+  background-color: #e8e8e8;
+}
+
+.join-modal__button--submit {
+  background-color: #003366;
+  border: none;
+  color: #fff;
+}
+
+.join-modal__button--submit:hover:not(:disabled) {
+  background-color: #002244;
+}
+
+.join-modal__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.join-modal__button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.3);
+}

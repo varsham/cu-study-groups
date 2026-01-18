@@ -1,0 +1,8 @@
+/* ABOUTME: App-level styles for layout structure. */
+/* ABOUTME: Minimal styles since most styling is in component CSS. */
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}

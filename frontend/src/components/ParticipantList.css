@@ -1,0 +1,152 @@
+/* ABOUTME: Styles for the ParticipantList component. */
+/* ABOUTME: Provides participant listing modal styling. */
+
+.participant-list-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.participant-list {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: participantListSlideIn 0.2s ease-out;
+}
+
+@keyframes participantListSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.participant-list__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.participant-list__close:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.participant-list__close:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.3);
+}
+
+.participant-list__title {
+  margin: 0 0 4px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #003366;
+}
+
+.participant-list__subtitle {
+  margin: 0 0 20px 0;
+  font-size: 0.9375rem;
+  color: #666;
+}
+
+.participant-list__loading {
+  padding: 32px 0;
+}
+
+.participant-list__error {
+  margin: 0;
+  padding: 16px;
+  font-size: 0.9375rem;
+  color: #d32f2f;
+  background-color: #ffebee;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.participant-list__empty {
+  margin: 0;
+  padding: 32px 0;
+  font-size: 0.9375rem;
+  color: #666;
+  text-align: center;
+}
+
+.participant-list__count {
+  margin: 0 0 16px 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #666;
+}
+
+.participant-list__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.participant-list__item {
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.participant-list__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.participant-list__name {
+  font-weight: 500;
+  color: #333;
+}
+
+.participant-list__email {
+  font-size: 0.875rem;
+  color: #003366;
+  text-decoration: none;
+}
+
+.participant-list__email:hover {
+  text-decoration: underline;
+}
+
+.participant-list__date {
+  font-size: 0.75rem;
+  color: #888;
+}

@@ -1,0 +1,146 @@
+/* ABOUTME: Styles for the LoginForm component with Columbia theming. */
+/* ABOUTME: Provides login form and success state styling. */
+
+.login-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 32px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.login-form--success {
+  text-align: center;
+}
+
+.login-form__title {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #003366;
+}
+
+.login-form__subtitle {
+  margin: 0 0 24px 0;
+  color: #666;
+  font-size: 0.9375rem;
+}
+
+.login-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-form__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.login-form__input {
+  padding: 12px 14px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-form__input:focus {
+  outline: none;
+  border-color: #003366;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+}
+
+.login-form__input.error {
+  border-color: #d32f2f;
+}
+
+.login-form__input.error:focus {
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+}
+
+.login-form__input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.login-form__input::placeholder {
+  color: #999;
+}
+
+.login-form__error {
+  font-size: 0.8125rem;
+  color: #d32f2f;
+  margin: 0;
+}
+
+.login-form__error--submit {
+  padding: 12px;
+  background-color: #ffebee;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.login-form__button {
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: #003366;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.login-form__button:hover:not(:disabled) {
+  background-color: #002244;
+}
+
+.login-form__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login-form__button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.3);
+}
+
+.login-form__note {
+  margin: 20px 0 0 0;
+  font-size: 0.8125rem;
+  color: #888;
+  text-align: center;
+}
+
+.login-form__success-icon {
+  color: #2e7d32;
+  margin-bottom: 16px;
+}
+
+.login-form__success-title {
+  margin: 0 0 12px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.login-form__success-message {
+  margin: 0;
+  color: #666;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.login-form__success-message strong {
+  color: #333;
+}

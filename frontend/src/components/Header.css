@@ -1,0 +1,85 @@
+/* ABOUTME: Styles for the Header component. */
+/* ABOUTME: Provides navigation bar with Columbia branding. */
+
+.header {
+  background-color: #003366;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.header__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.header__logo-icon {
+  background-color: #fff;
+  color: #003366;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.header__logo-text {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header__link {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.header__link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.header__link--active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .header__container {
+    padding: 0 16px;
+    height: 56px;
+  }
+
+  .header__logo-text {
+    display: none;
+  }
+
+  .header__link {
+    font-size: 0.875rem;
+    padding: 6px 12px;
+  }
+}
