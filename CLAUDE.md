@@ -40,6 +40,9 @@ A study group management system for Columbia University students. Students submi
 - **Join Flow**: When a user joins a group (or tries to join one they've already joined), redirect to a dedicated group page showing all participants
 - **Participant Visibility**: Organizers and participants can see other participants' names/emails; everyone else sees only counts
 - **Leave Group**: Participants can leave a group from the group page; this removes them from the participant list
+- **Email Notifications**: Send confirmation emails when a user joins or leaves a group
+- **Organizer Redirect**: Logged-in organizers are automatically redirected from homepage to dashboard
+- **Columbia-only Access**: Only @columbia.edu and @barnard.edu emails can join groups or log in
 
 ---
 
@@ -317,19 +320,39 @@ All phases completed:
 ### Test Coverage
 
 - **Backend (pytest)**: 29 tests
-- **Frontend (vitest)**: 150 tests
-- **Total**: 179 tests passing
+- **Frontend (vitest)**: 156 tests
+- **Total**: 185 tests passing
 
 ### Key Files
 
 **Frontend**:
 - `frontend/src/pages/HomePage.tsx` - Main study group listing
 - `frontend/src/pages/DashboardPage.tsx` - Organizer login/dashboard
+- `frontend/src/pages/GroupPage.tsx` - Dedicated group view with participant list
 - `frontend/src/components/` - Reusable UI components
 - `frontend/src/hooks/useStudyGroups.ts` - Real-time data fetching
 - `frontend/src/contexts/AuthContext.tsx` - Magic link authentication
+- `frontend/src/contexts/UserEmailContext.tsx` - Persists user email after joining
+- `frontend/src/lib/database.types.ts` - TypeScript types for Supabase schema
 
 **Backend**:
-- `supabase/migrations/` - Database schema
-- `supabase/functions/on-participant-joined/` - Email notifications
+- `supabase/migrations/` - Database schema and RLS policies
+- `supabase/migrations/20260117000006_restrict_email_domains.sql` - Columbia/Barnard email constraints
+- `supabase/migrations/20260117000007_participant_visibility.sql` - Functions for participant visibility
+- `supabase/functions/on-participant-joined/` - Email notifications on join
+- `supabase/functions/send-join-confirmation/` - Join confirmation email
+- `supabase/functions/send-organizer-notification/` - Organizer notification email
 - `google-apps-script/webhook.gs` - Form submission handler
+
+### Database Functions
+
+- `get_participant_count(p_study_group_id)` - Returns participant count for a group
+- `is_study_group_full(p_study_group_id)` - Returns true if group is at capacity
+- `is_group_member(p_study_group_id, p_email)` - Checks if email is organizer or participant
+- `get_group_participants_if_member(p_study_group_id, p_requester_email)` - Returns participant details only if requester is a member
+
+### Deployment
+
+- **Frontend**: Vercel (auto-deploys from main branch)
+- **Backend**: Supabase (migrations via CLI, Edge Functions via GitHub Actions)
+- **Live URL**: https://cu-study-groups.vercel.app/

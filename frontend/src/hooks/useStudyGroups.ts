@@ -85,9 +85,11 @@ export function useStudyGroups(searchQuery: string = ""): UseStudyGroupsResult {
         name,
         email,
       };
-      const { error: insertError } = await supabase
+      const { data: insertedParticipant, error: insertError } = await supabase
         .from("participants")
-        .insert(participant);
+        .insert(participant)
+        .select()
+        .single();
 
       if (insertError) {
         if (insertError.message.includes("unique")) {
@@ -97,6 +99,20 @@ export function useStudyGroups(searchQuery: string = ""): UseStudyGroupsResult {
           throw new Error("This study group is now full");
         }
         throw new Error(insertError.message);
+      }
+
+      // Send confirmation emails via Edge Function (fire and forget)
+      if (insertedParticipant) {
+        supabase.functions
+          .invoke("on-participant-joined", {
+            body: {
+              participant_id: insertedParticipant.id,
+              participant_name: name,
+              participant_email: email,
+              study_group_id: groupId,
+            },
+          })
+          .catch((err) => console.error("Failed to send join emails:", err));
       }
 
       // Refetch to get updated counts

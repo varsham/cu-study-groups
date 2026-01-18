@@ -120,6 +120,11 @@ export function GroupPage() {
     );
     if (!confirmed) return;
 
+    // Find current user's name from participants list
+    const currentParticipant = participants.find(
+      (p) => p.email.toLowerCase() === effectiveEmail.toLowerCase(),
+    );
+
     setIsLeaving(true);
     try {
       const { error: deleteError } = await supabase
@@ -130,6 +135,19 @@ export function GroupPage() {
 
       if (deleteError) {
         throw new Error(deleteError.message);
+      }
+
+      // Send leave confirmation emails via Edge Function (fire and forget)
+      if (currentParticipant) {
+        supabase.functions
+          .invoke("on-participant-left", {
+            body: {
+              participant_name: currentParticipant.name,
+              participant_email: effectiveEmail,
+              study_group_id: groupId,
+            },
+          })
+          .catch((err) => console.error("Failed to send leave emails:", err));
       }
 
       // Redirect to home page after leaving
