@@ -14,16 +14,16 @@
 // Column indices (0-based) - adjust if your form columns differ
 const COLUMNS = {
   TIMESTAMP: 0,
-  EMAIL: 1,
-  NAME: 2,
-  SUBJECT: 3,
-  SUBJECT_OTHER: 4,
-  PROFESSOR_NAME: 5,
-  DATE: 6,
-  LOCATION: 7,
-  START_TIME: 8,
-  END_TIME: 9,
-  STUDENT_LIMIT: 10
+  NAME: 1,
+  SUBJECT: 2,
+  SUBJECT_OTHER: 3,
+  DATE: 4,
+  LOCATION: 5,
+  START_TIME: 6,
+  END_TIME: 7,
+  STUDENT_LIMIT: 8,
+  EMAIL: 9,
+  PROFESSOR_NAME: 10
 };
 
 /**
@@ -175,7 +175,8 @@ function combineDateAndTime(dateValue, timeValue) {
  */
 function isColumbiaEmail(email) {
   if (!email) return false;
-  return email.toLowerCase().endsWith('@columbia.edu');
+  const lowerEmail = email.toLowerCase();
+  return lowerEmail.endsWith('@columbia.edu') || lowerEmail.endsWith('@barnard.edu');
 }
 
 /**
