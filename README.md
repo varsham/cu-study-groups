@@ -89,6 +89,35 @@ npx supabase secrets set GMAIL_USER=your-email@columbia.edu
 npx supabase secrets set GMAIL_APP_PASSWORD=your-app-password
 ```
 
+## Deployment
+
+### Automated Deployment (Recommended)
+
+This project uses **Vercel** for frontend hosting and **GitHub Actions** for Supabase.
+
+#### Frontend (Vercel)
+
+1. Go to [vercel.com](https://vercel.com) and sign in with GitHub
+2. Click "Import Project" and select `varsham/cu-study-groups`
+3. Vercel will auto-detect settings from `vercel.json`
+4. Add environment variables:
+   - `VITE_SUPABASE_URL`: Your Supabase URL
+   - `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
+5. Click "Deploy"
+
+Every push to `main` will auto-deploy. PRs get preview deployments.
+
+#### Backend (GitHub Actions)
+
+1. Go to your repo Settings → Secrets and variables → Actions
+2. Add these secrets:
+   - `SUPABASE_PROJECT_REF`: `qmosxdzmvzfusgxhditg`
+   - `SUPABASE_ACCESS_TOKEN`: Get from [Supabase Dashboard](https://supabase.com/dashboard/account/tokens)
+   - `SUPABASE_URL`: Your Supabase URL
+   - `SUPABASE_SERVICE_ROLE_KEY`: Your service role key
+
+Changes to `supabase/` folder will auto-deploy migrations and Edge Functions.
+
 ## Development
 
 ### Run Tests
