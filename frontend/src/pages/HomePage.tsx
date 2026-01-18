@@ -1,30 +1,41 @@
 // ABOUTME: Main homepage displaying all available study groups
 // ABOUTME: Includes search, filtering, and join functionality
 
-import { useState } from 'react'
-import { useStudyGroups } from '../hooks/useStudyGroups'
-import { SearchBar } from '../components/SearchBar'
-import { StudyGroupCard } from '../components/StudyGroupCard'
-import { JoinModal } from '../components/JoinModal'
-import { LoadingSpinner } from '../components/LoadingSpinner'
-import { ErrorMessage } from '../components/ErrorMessage'
-import { EmptyState } from '../components/EmptyState'
-import type { StudyGroupWithCounts } from '../lib/database.types'
-import './HomePage.css'
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { useStudyGroups } from "../hooks/useStudyGroups";
+import { SearchBar } from "../components/SearchBar";
+import { StudyGroupCard } from "../components/StudyGroupCard";
+import { JoinModal } from "../components/JoinModal";
+import { LoadingSpinner } from "../components/LoadingSpinner";
+import { ErrorMessage } from "../components/ErrorMessage";
+import { EmptyState } from "../components/EmptyState";
+import type { StudyGroupWithCounts } from "../lib/database.types";
+import "./HomePage.css";
 
 export function HomePage() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const navigate = useNavigate();
+  const { user, isLoading: authLoading } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
   const { groups, isLoading, error, refetch, joinGroup } =
-    useStudyGroups(searchQuery)
+    useStudyGroups(searchQuery);
+
+  // Redirect logged-in organizers to dashboard
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, authLoading, navigate]);
 
   const [joinTarget, setJoinTarget] = useState<StudyGroupWithCounts | null>(
-    null
-  )
+    null,
+  );
 
   const handleJoin = async (data: { name: string; email: string }) => {
-    if (!joinTarget) return
-    await joinGroup(joinTarget.id, data.name, data.email)
-  }
+    if (!joinTarget) return;
+    await joinGroup(joinTarget.id, data.name, data.email);
+  };
 
   return (
     <div className="home-page">
@@ -56,13 +67,13 @@ export function HomePage() {
           <EmptyState
             title={
               searchQuery
-                ? 'No matching study groups'
-                : 'No study groups available'
+                ? "No matching study groups"
+                : "No study groups available"
             }
             description={
               searchQuery
-                ? 'Try a different search term or check back later.'
-                : 'Check back later or create your own using the Google Form.'
+                ? "Try a different search term or check back later."
+                : "Check back later or create your own using the Google Form."
             }
           />
         )}
@@ -70,8 +81,8 @@ export function HomePage() {
         {!isLoading && !error && groups.length > 0 && (
           <div className="home-page__groups">
             <p className="home-page__count">
-              {groups.length} study group{groups.length !== 1 ? 's' : ''}{' '}
-              {searchQuery ? 'found' : 'available'}
+              {groups.length} study group{groups.length !== 1 ? "s" : ""}{" "}
+              {searchQuery ? "found" : "available"}
             </p>
             <div className="home-page__grid">
               {groups.map((group) => (
@@ -95,5 +106,5 @@ export function HomePage() {
         />
       )}
     </div>
-  )
+  );
 }

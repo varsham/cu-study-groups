@@ -3,7 +3,16 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { HomePage } from "./HomePage";
+
+// Mock useAuth to return no user (so we don't redirect)
+vi.mock("../contexts/AuthContext", () => ({
+  useAuth: () => ({
+    user: null,
+    isLoading: false,
+  }),
+}));
 
 const mockGroups = [
   {
@@ -52,6 +61,10 @@ describe("HomePage", () => {
     mockRefetch.mockReset();
   });
 
+  const renderWithRouter = (ui: React.ReactElement) => {
+    return render(<MemoryRouter>{ui}</MemoryRouter>);
+  };
+
   it("renders hero section", () => {
     mockUseStudyGroups.mockReturnValue({
       groups: [],
@@ -61,7 +74,7 @@ describe("HomePage", () => {
       joinGroup: mockJoinGroup,
     });
 
-    render(<HomePage />);
+    renderWithRouter(<HomePage />);
 
     expect(screen.getByText("CU Study Groups")).toBeInTheDocument();
     expect(screen.getByText(/Find and join study groups/)).toBeInTheDocument();
@@ -76,7 +89,7 @@ describe("HomePage", () => {
       joinGroup: mockJoinGroup,
     });
 
-    render(<HomePage />);
+    renderWithRouter(<HomePage />);
 
     expect(
       screen.getByPlaceholderText(/Search by subject/),
@@ -92,7 +105,7 @@ describe("HomePage", () => {
       joinGroup: mockJoinGroup,
     });
 
-    render(<HomePage />);
+    renderWithRouter(<HomePage />);
 
     expect(screen.getByText("Loading study groups...")).toBeInTheDocument();
   });
@@ -106,7 +119,7 @@ describe("HomePage", () => {
       joinGroup: mockJoinGroup,
     });
 
-    render(<HomePage />);
+    renderWithRouter(<HomePage />);
 
     expect(screen.getByText("Failed to load groups")).toBeInTheDocument();
     expect(
@@ -123,7 +136,7 @@ describe("HomePage", () => {
       joinGroup: mockJoinGroup,
     });
 
-    render(<HomePage />);
+    renderWithRouter(<HomePage />);
 
     expect(screen.getByText("No study groups available")).toBeInTheDocument();
   });
@@ -137,7 +150,7 @@ describe("HomePage", () => {
       joinGroup: mockJoinGroup,
     });
 
-    render(<HomePage />);
+    renderWithRouter(<HomePage />);
 
     expect(screen.getByText("Calculus I")).toBeInTheDocument();
     expect(screen.getByText("Physics II")).toBeInTheDocument();
@@ -153,7 +166,7 @@ describe("HomePage", () => {
       joinGroup: mockJoinGroup,
     });
 
-    render(<HomePage />);
+    renderWithRouter(<HomePage />);
 
     const joinButtons = screen.getAllByRole("button", { name: /join/i });
     fireEvent.click(joinButtons[0]);
@@ -171,7 +184,7 @@ describe("HomePage", () => {
       joinGroup: mockJoinGroup,
     });
 
-    render(<HomePage />);
+    renderWithRouter(<HomePage />);
 
     const joinButtons = screen.getAllByRole("button", { name: /join/i });
     fireEvent.click(joinButtons[0]);
@@ -193,7 +206,7 @@ describe("HomePage", () => {
       joinGroup: mockJoinGroup,
     });
 
-    render(<HomePage />);
+    renderWithRouter(<HomePage />);
 
     const joinButtons = screen.getAllByRole("button", { name: /join/i });
     fireEvent.click(joinButtons[0]);
