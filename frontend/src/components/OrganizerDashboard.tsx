@@ -1,48 +1,80 @@
 // ABOUTME: Dashboard component for organizers to manage their study groups
 // ABOUTME: Shows list of owned groups with view participants and delete actions
 
-import { useState, useCallback } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import { useOrganizerGroups } from '../hooks/useOrganizerGroups'
-import { formatTimeRange, getRelativeDay } from '../lib/timezone'
-import { LoadingSpinner } from './LoadingSpinner'
-import { ErrorMessage } from './ErrorMessage'
-import { EmptyState } from './EmptyState'
-import { ConfirmModal } from './ConfirmModal'
-import { ParticipantList } from './ParticipantList'
-import './OrganizerDashboard.css'
+import { useState, useCallback } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { useOrganizerGroups } from "../hooks/useOrganizerGroups";
+import type { CreateStudyGroupInput } from "../hooks/useOrganizerGroups";
+import { formatTimeRange, getRelativeDay } from "../lib/timezone";
+import { LoadingSpinner } from "./LoadingSpinner";
+import { ErrorMessage } from "./ErrorMessage";
+import { EmptyState } from "./EmptyState";
+import { ConfirmModal } from "./ConfirmModal";
+import { ParticipantList } from "./ParticipantList";
+import {
+  CreateStudyGroupForm,
+  type StudyGroupFormData,
+} from "./CreateStudyGroupForm";
+import "./OrganizerDashboard.css";
 
 export function OrganizerDashboard() {
-  const { user, signOut } = useAuth()
-  const { groups, isLoading, error, refetch, deleteGroup, getParticipants } =
-    useOrganizerGroups()
+  const { user, signOut } = useAuth();
+  const {
+    groups,
+    isLoading,
+    error,
+    refetch,
+    createGroup,
+    deleteGroup,
+    getParticipants,
+  } = useOrganizerGroups();
 
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{
-    id: string
-    subject: string
-  } | null>(null)
+    id: string;
+    subject: string;
+  } | null>(null);
   const [participantsTarget, setParticipantsTarget] = useState<{
-    id: string
-    subject: string
-  } | null>(null)
+    id: string;
+    subject: string;
+  } | null>(null);
 
   const handleDelete = useCallback(async () => {
-    if (!deleteTarget) return
-    await deleteGroup(deleteTarget.id)
-    setDeleteTarget(null)
-  }, [deleteTarget, deleteGroup])
+    if (!deleteTarget) return;
+    await deleteGroup(deleteTarget.id);
+    setDeleteTarget(null);
+  }, [deleteTarget, deleteGroup]);
 
   const handleViewParticipants = useCallback(
     (groupId: string, subject: string) => {
-      setParticipantsTarget({ id: groupId, subject })
+      setParticipantsTarget({ id: groupId, subject });
     },
-    []
-  )
+    [],
+  );
 
   const fetchParticipantsForGroup = useCallback(() => {
-    if (!participantsTarget) return Promise.resolve([])
-    return getParticipants(participantsTarget.id)
-  }, [participantsTarget, getParticipants])
+    if (!participantsTarget) return Promise.resolve([]);
+    return getParticipants(participantsTarget.id);
+  }, [participantsTarget, getParticipants]);
+
+  const handleCreateGroup = useCallback(
+    async (formData: StudyGroupFormData) => {
+      const input: CreateStudyGroupInput = {
+        subject: formData.subject,
+        professor_name: formData.professor_name,
+        location: formData.location,
+        date: formData.date,
+        start_time: formData.start_time,
+        end_time: formData.end_time,
+        student_limit: formData.student_limit,
+        organizer_name: formData.organizer_name,
+        organizer_email: formData.organizer_email,
+      };
+      await createGroup(input);
+      setShowCreateForm(false);
+    },
+    [createGroup],
+  );
 
   if (isLoading) {
     return (
@@ -51,7 +83,7 @@ export function OrganizerDashboard() {
           <LoadingSpinner size="large" message="Loading your study groups..." />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -61,13 +93,22 @@ export function OrganizerDashboard() {
           <h1 className="organizer-dashboard__title">Your Study Groups</h1>
           <p className="organizer-dashboard__email">{user?.email}</p>
         </div>
-        <button
-          type="button"
-          className="organizer-dashboard__signout"
-          onClick={signOut}
-        >
-          Sign Out
-        </button>
+        <div className="organizer-dashboard__header-actions">
+          <button
+            type="button"
+            className="organizer-dashboard__create"
+            onClick={() => setShowCreateForm(true)}
+          >
+            + Create Study Group
+          </button>
+          <button
+            type="button"
+            className="organizer-dashboard__signout"
+            onClick={signOut}
+          >
+            Sign Out
+          </button>
+        </div>
       </header>
 
       {error && (
@@ -79,7 +120,7 @@ export function OrganizerDashboard() {
       {!error && groups.length === 0 && (
         <EmptyState
           title="No Study Groups"
-          description="You haven't created any study groups yet. Create one using the Google Form."
+          description="You haven't created any study groups yet. Click the button above to create one."
         />
       )}
 
@@ -117,7 +158,7 @@ export function OrganizerDashboard() {
                   <span className="organizer-dashboard__card-icon">👥</span>
                   <span>
                     {group.participant_count}
-                    {group.student_limit ? `/${group.student_limit}` : ''}{' '}
+                    {group.student_limit ? `/${group.student_limit}` : ""}{" "}
                     participants
                   </span>
                 </div>
@@ -166,6 +207,14 @@ export function OrganizerDashboard() {
           onClose={() => setParticipantsTarget(null)}
         />
       )}
+
+      {showCreateForm && user?.email && (
+        <CreateStudyGroupForm
+          organizerEmail={user.email}
+          onSubmit={handleCreateGroup}
+          onCancel={() => setShowCreateForm(false)}
+        />
+      )}
     </div>
-  )
+  );
 }

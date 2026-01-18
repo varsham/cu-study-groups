@@ -43,6 +43,7 @@ A study group management system for Columbia University students. Students submi
 - **Email Notifications**: Send confirmation emails when a user joins or leaves a group
 - **Organizer Redirect**: Logged-in organizers are automatically redirected from homepage to dashboard
 - **Columbia-only Access**: Only @columbia.edu and @barnard.edu emails can join groups or log in
+- **Direct Group Creation**: Logged-in organizers can create study groups directly from the dashboard (same fields as Google Form)
 
 ---
 
@@ -329,8 +330,11 @@ All phases completed:
 - `frontend/src/pages/HomePage.tsx` - Main study group listing
 - `frontend/src/pages/DashboardPage.tsx` - Organizer login/dashboard
 - `frontend/src/pages/GroupPage.tsx` - Dedicated group view with participant list
+- `frontend/src/components/OrganizerDashboard.tsx` - Dashboard with group management and create form
+- `frontend/src/components/CreateStudyGroupForm.tsx` - Form for creating new study groups
 - `frontend/src/components/` - Reusable UI components
 - `frontend/src/hooks/useStudyGroups.ts` - Real-time data fetching
+- `frontend/src/hooks/useOrganizerGroups.ts` - Organizer's groups with CRUD operations
 - `frontend/src/contexts/AuthContext.tsx` - Magic link authentication
 - `frontend/src/contexts/UserEmailContext.tsx` - Persists user email after joining
 - `frontend/src/lib/database.types.ts` - TypeScript types for Supabase schema
