@@ -1,12 +1,10 @@
 // ABOUTME: Edge Function triggered when a participant leaves a study group
-// ABOUTME: Sends confirmation email to the participant and notification to organizer
+// ABOUTME: Sends confirmation email to the participant and notification to organizer via Resend
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
 
-const GMAIL_USER = Deno.env.get("GMAIL_USER");
-const GMAIL_APP_PASSWORD = Deno.env.get("GMAIL_APP_PASSWORD");
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
@@ -28,26 +26,26 @@ async function sendEmail(
   html: string,
 ): Promise<boolean> {
   try {
-    const client = new SMTPClient({
-      connection: {
-        hostname: "smtp.gmail.com",
-        port: 465,
-        tls: true,
-        auth: {
-          username: GMAIL_USER!,
-          password: GMAIL_APP_PASSWORD!,
-        },
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        from: "CU Study Groups <onboarding@resend.dev>",
+        to: [to],
+        subject: subject,
+        html: html,
+      }),
     });
 
-    await client.send({
-      from: `CU Study Groups <${GMAIL_USER}>`,
-      to: to,
-      subject: subject,
-      html: html,
-    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Resend API error:", errorText);
+      return false;
+    }
 
-    await client.close();
     return true;
   } catch (error) {
     console.error("Email send error:", error);
