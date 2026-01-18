@@ -101,19 +101,20 @@ export function useStudyGroups(searchQuery: string = ""): UseStudyGroupsResult {
         throw new Error(insertError.message);
       }
 
-      // Send confirmation emails via Edge Function (fire and forget)
-      if (insertedParticipant) {
-        supabase.functions
-          .invoke("on-participant-joined", {
-            body: {
-              participant_id: insertedParticipant.id,
-              participant_name: name,
-              participant_email: email,
-              study_group_id: groupId,
-            },
-          })
-          .catch((err) => console.error("Failed to send join emails:", err));
-      }
+      // Email notifications disabled - Resend requires domain verification
+      // TODO: Re-enable when a verified domain is available
+      // if (insertedParticipant) {
+      //   supabase.functions
+      //     .invoke("on-participant-joined", {
+      //       body: {
+      //         participant_id: insertedParticipant.id,
+      //         participant_name: name,
+      //         participant_email: email,
+      //         study_group_id: groupId,
+      //       },
+      //     })
+      //     .catch((err) => console.error("Failed to send join emails:", err));
+      // }
 
       // Refetch to get updated counts
       await fetchGroups();

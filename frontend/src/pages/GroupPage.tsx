@@ -137,18 +137,19 @@ export function GroupPage() {
         throw new Error(deleteError.message);
       }
 
-      // Send leave confirmation emails via Edge Function (fire and forget)
-      if (currentParticipant) {
-        supabase.functions
-          .invoke("on-participant-left", {
-            body: {
-              participant_name: currentParticipant.name,
-              participant_email: effectiveEmail,
-              study_group_id: groupId,
-            },
-          })
-          .catch((err) => console.error("Failed to send leave emails:", err));
-      }
+      // Email notifications disabled - Resend requires domain verification
+      // TODO: Re-enable when a verified domain is available
+      // if (currentParticipant) {
+      //   supabase.functions
+      //     .invoke("on-participant-left", {
+      //       body: {
+      //         participant_name: currentParticipant.name,
+      //         participant_email: effectiveEmail,
+      //         study_group_id: groupId,
+      //       },
+      //     })
+      //     .catch((err) => console.error("Failed to send leave emails:", err));
+      // }
 
       // Redirect to home page after leaving
       navigate("/");
