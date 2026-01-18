@@ -37,6 +37,8 @@ A study group management system for Columbia University students. Students submi
 - **Duplicate Groups**: Warn via email, but allow duplicates
 - **Anonymous Organizers**: If no name provided, just show date/time (no "Anonymous" label)
 - **Branding**: Generic Columbia (not SEAS-specific)
+- **Join Flow**: When a user joins a group (or tries to join one they've already joined), redirect to a dedicated group page showing all participants
+- **Participant Visibility**: Organizers and participants can see other participants' names/emails; everyone else sees only counts
 
 ---
 

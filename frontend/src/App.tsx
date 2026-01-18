@@ -7,6 +7,7 @@ import { UserEmailProvider } from "./contexts/UserEmailContext";
 import { Header } from "./components/Header";
 import { HomePage } from "./pages/HomePage";
 import { DashboardPage } from "./pages/DashboardPage";
+import { GroupPage } from "./pages/GroupPage";
 import "./App.css";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/group/:groupId" element={<GroupPage />} />
             </Routes>
           </main>
         </UserEmailProvider>

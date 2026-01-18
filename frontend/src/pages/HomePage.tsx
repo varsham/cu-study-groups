@@ -18,13 +18,10 @@ import "./HomePage.css";
 export function HomePage() {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
-  const { userEmail, setUserEmail } = useUserEmail();
+  const { setUserEmail } = useUserEmail();
   const [searchQuery, setSearchQuery] = useState("");
   const { groups, isLoading, error, refetch, joinGroup } =
     useStudyGroups(searchQuery);
-
-  // Get effective email (from auth or from localStorage after joining)
-  const effectiveEmail = user?.email || userEmail;
 
   // Redirect logged-in organizers to dashboard
   useEffect(() => {
@@ -39,9 +36,21 @@ export function HomePage() {
 
   const handleJoin = async (data: { name: string; email: string }) => {
     if (!joinTarget) return;
-    await joinGroup(joinTarget.id, data.name, data.email);
-    // Save the email so user can see participants in groups they've joined
-    setUserEmail(data.email);
+    try {
+      await joinGroup(joinTarget.id, data.name, data.email);
+      // Save the email so user can see participants in groups they've joined
+      setUserEmail(data.email);
+      // Redirect to group page after successful join
+      navigate(`/group/${joinTarget.id}`);
+    } catch (err) {
+      // Check if already joined - redirect to group page anyway
+      if (err instanceof Error && err.message.includes("already joined")) {
+        setUserEmail(data.email);
+        navigate(`/group/${joinTarget.id}`);
+        return;
+      }
+      throw err;
+    }
   };
 
   return (
@@ -97,7 +106,6 @@ export function HomePage() {
                   key={group.id}
                   group={group}
                   onJoin={() => setJoinTarget(group)}
-                  userEmail={effectiveEmail}
                 />
               ))}
             </div>

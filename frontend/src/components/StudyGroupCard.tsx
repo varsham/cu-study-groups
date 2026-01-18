@@ -3,20 +3,14 @@
 
 import type { StudyGroupWithCounts } from "../lib/database.types";
 import { formatTimeRange, getRelativeDay } from "../lib/timezone";
-import { GroupParticipants } from "./GroupParticipants";
 import "./StudyGroupCard.css";
 
 interface StudyGroupCardProps {
   group: StudyGroupWithCounts;
   onJoin: (groupId: string) => void;
-  userEmail?: string | null;
 }
 
-export function StudyGroupCard({
-  group,
-  onJoin,
-  userEmail,
-}: StudyGroupCardProps) {
+export function StudyGroupCard({ group, onJoin }: StudyGroupCardProps) {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     group.location + " Columbia University New York",
   )}`;
@@ -81,12 +75,6 @@ export function StudyGroupCard({
           </button>
         )}
       </div>
-
-      <GroupParticipants
-        groupId={group.id}
-        userEmail={userEmail ?? null}
-        participantCount={group.participant_count}
-      />
     </div>
   );
 }
