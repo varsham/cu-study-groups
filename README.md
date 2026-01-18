@@ -135,6 +135,28 @@ Gmail requires an "App Password" for SMTP access (your regular password won't wo
 - Verify 2-Step Verification is enabled on the Google account
 - Make sure the email is a Google/Gmail account (some university emails use different providers)
 
+#### C. Configure Auth Redirect URLs
+
+Magic links need to know your production URL to redirect correctly (otherwise they'll go to localhost):
+
+1. Go to **https://supabase.com/dashboard/project/YOUR_PROJECT_REF/auth/url-configuration**
+
+2. Set the following:
+
+| Setting | Value |
+|---------|-------|
+| Site URL | `https://your-app.vercel.app` |
+| Redirect URLs | `https://your-app.vercel.app/**` |
+
+3. Click **Save**
+
+The **Site URL** is the default redirect destination. The **Redirect URLs** whitelist allows the app to redirect to specific pages like `/dashboard` after authentication.
+
+**Troubleshooting "Magic link goes to localhost"**:
+- Ensure Site URL is set to your production URL (not `http://localhost:3000`)
+- Add a wildcard redirect URL (`https://your-app.vercel.app/**`) to allow deep links
+- Request a new magic link after saving changes (old links use the old URL)
+
 ## Deployment
 
 ### Automated Deployment (Recommended)
