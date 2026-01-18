@@ -3,6 +3,7 @@
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { UserEmailProvider } from "./contexts/UserEmailContext";
 import { Header } from "./components/Header";
 import { HomePage } from "./pages/HomePage";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -12,13 +13,15 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Header />
-        <main>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-          </Routes>
-        </main>
+        <UserEmailProvider>
+          <Header />
+          <main>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+            </Routes>
+          </main>
+        </UserEmailProvider>
       </AuthProvider>
     </BrowserRouter>
   );

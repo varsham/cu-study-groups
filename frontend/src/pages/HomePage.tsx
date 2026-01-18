@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useUserEmail } from "../contexts/UserEmailContext";
 import { useStudyGroups } from "../hooks/useStudyGroups";
 import { SearchBar } from "../components/SearchBar";
 import { StudyGroupCard } from "../components/StudyGroupCard";
@@ -17,9 +18,13 @@ import "./HomePage.css";
 export function HomePage() {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
+  const { userEmail, setUserEmail } = useUserEmail();
   const [searchQuery, setSearchQuery] = useState("");
   const { groups, isLoading, error, refetch, joinGroup } =
     useStudyGroups(searchQuery);
+
+  // Get effective email (from auth or from localStorage after joining)
+  const effectiveEmail = user?.email || userEmail;
 
   // Redirect logged-in organizers to dashboard
   useEffect(() => {
@@ -35,6 +40,8 @@ export function HomePage() {
   const handleJoin = async (data: { name: string; email: string }) => {
     if (!joinTarget) return;
     await joinGroup(joinTarget.id, data.name, data.email);
+    // Save the email so user can see participants in groups they've joined
+    setUserEmail(data.email);
   };
 
   return (
@@ -90,6 +97,7 @@ export function HomePage() {
                   key={group.id}
                   group={group}
                   onJoin={() => setJoinTarget(group)}
+                  userEmail={effectiveEmail}
                 />
               ))}
             </div>

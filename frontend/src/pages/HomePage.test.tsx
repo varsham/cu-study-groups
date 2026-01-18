@@ -14,6 +14,15 @@ vi.mock("../contexts/AuthContext", () => ({
   }),
 }));
 
+// Mock useUserEmail
+vi.mock("../contexts/UserEmailContext", () => ({
+  useUserEmail: () => ({
+    userEmail: null,
+    setUserEmail: vi.fn(),
+    clearUserEmail: vi.fn(),
+  }),
+}));
+
 const mockGroups = [
   {
     id: "1",

@@ -1,26 +1,32 @@
 // ABOUTME: Study group card component for displaying group information
 // ABOUTME: Shows subject, time, location, organizer, and join button
 
-import type { StudyGroupWithCounts } from '../lib/database.types'
-import { formatTimeRange, getRelativeDay } from '../lib/timezone'
-import './StudyGroupCard.css'
+import type { StudyGroupWithCounts } from "../lib/database.types";
+import { formatTimeRange, getRelativeDay } from "../lib/timezone";
+import { GroupParticipants } from "./GroupParticipants";
+import "./StudyGroupCard.css";
 
 interface StudyGroupCardProps {
-  group: StudyGroupWithCounts
-  onJoin: (groupId: string) => void
+  group: StudyGroupWithCounts;
+  onJoin: (groupId: string) => void;
+  userEmail?: string | null;
 }
 
-export function StudyGroupCard({ group, onJoin }: StudyGroupCardProps) {
+export function StudyGroupCard({
+  group,
+  onJoin,
+  userEmail,
+}: StudyGroupCardProps) {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    group.location + ' Columbia University New York'
-  )}`
+    group.location + " Columbia University New York",
+  )}`;
 
   const capacityText = group.student_limit
     ? `${group.participant_count}/${group.student_limit}`
-    : `${group.participant_count} joined`
+    : `${group.participant_count} joined`;
 
   return (
-    <div className={`study-group-card ${group.is_full ? 'full' : ''}`}>
+    <div className={`study-group-card ${group.is_full ? "full" : ""}`}>
       <div className="card-header">
         <h3 className="subject">{group.subject}</h3>
         {group.professor_name && (
@@ -75,6 +81,12 @@ export function StudyGroupCard({ group, onJoin }: StudyGroupCardProps) {
           </button>
         )}
       </div>
+
+      <GroupParticipants
+        groupId={group.id}
+        userEmail={userEmail ?? null}
+        participantCount={group.participant_count}
+      />
     </div>
-  )
+  );
 }
