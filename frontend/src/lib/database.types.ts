@@ -98,6 +98,19 @@ export interface Database {
         Args: { p_study_group_id: string };
         Returns: boolean;
       };
+      is_group_member: {
+        Args: { p_study_group_id: string; p_email: string };
+        Returns: boolean;
+      };
+      get_group_participants_if_member: {
+        Args: { p_study_group_id: string; p_requester_email: string };
+        Returns: {
+          id: string;
+          name: string;
+          email: string;
+          joined_at: string;
+        }[];
+      };
     };
     Enums: {
       [_ in never]: never;
