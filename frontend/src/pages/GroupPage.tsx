@@ -42,6 +42,7 @@ export function GroupPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isMember, setIsMember] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -73,12 +74,19 @@ export function GroupPage() {
               p_requester_email: effectiveEmail,
             });
 
-          if (!participantError && participantData && participantData.length > 0) {
+          if (
+            !participantError &&
+            participantData &&
+            participantData.length > 0
+          ) {
             setParticipants(participantData);
             setIsMember(true);
           } else {
             // Check if user is the organizer
-            if (groupData.organizer_email.toLowerCase() === effectiveEmail.toLowerCase()) {
+            if (
+              groupData.organizer_email.toLowerCase() ===
+              effectiveEmail.toLowerCase()
+            ) {
               setIsMember(true);
               // Fetch participants as organizer
               const { data: orgParticipants } = await supabase.rpc(
@@ -86,7 +94,7 @@ export function GroupPage() {
                 {
                   p_study_group_id: groupId,
                   p_requester_email: effectiveEmail,
-                }
+                },
               );
               if (orgParticipants) {
                 setParticipants(orgParticipants);
@@ -103,6 +111,39 @@ export function GroupPage() {
 
     fetchData();
   }, [groupId, effectiveEmail]);
+
+  const handleLeaveGroup = async () => {
+    if (!groupId || !effectiveEmail || isLeaving) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to leave this study group?",
+    );
+    if (!confirmed) return;
+
+    setIsLeaving(true);
+    try {
+      const { error: deleteError } = await supabase
+        .from("participants")
+        .delete()
+        .eq("study_group_id", groupId)
+        .eq("email", effectiveEmail.toLowerCase());
+
+      if (deleteError) {
+        throw new Error(deleteError.message);
+      }
+
+      // Redirect to home page after leaving
+      navigate("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to leave group");
+      setIsLeaving(false);
+    }
+  };
+
+  // Check if current user is a participant (not just organizer)
+  const isParticipant = participants.some(
+    (p) => p.email.toLowerCase() === effectiveEmail?.toLowerCase(),
+  );
 
   if (isLoading) {
     return (
@@ -131,7 +172,7 @@ export function GroupPage() {
   }
 
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    group.location + " Columbia University New York"
+    group.location + " Columbia University New York",
   )}`;
 
   const isOrganizer =
@@ -148,7 +189,9 @@ export function GroupPage() {
         <div className="group-page__header">
           <h1 className="group-page__title">{group.subject}</h1>
           {group.professor_name && (
-            <p className="group-page__professor">Prof. {group.professor_name}</p>
+            <p className="group-page__professor">
+              Prof. {group.professor_name}
+            </p>
           )}
         </div>
 
@@ -211,8 +254,8 @@ export function GroupPage() {
                     <div className="group-page__participant-info">
                       <span className="group-page__participant-name">
                         {p.name}
-                        {p.email.toLowerCase() === effectiveEmail?.toLowerCase() &&
-                          " (you)"}
+                        {p.email.toLowerCase() ===
+                          effectiveEmail?.toLowerCase() && " (you)"}
                       </span>
                       <a
                         href={`mailto:${p.email}`}
@@ -224,6 +267,16 @@ export function GroupPage() {
                   </li>
                 ))}
               </ul>
+            )}
+
+            {isParticipant && (
+              <button
+                className="group-page__leave-button"
+                onClick={handleLeaveGroup}
+                disabled={isLeaving}
+              >
+                {isLeaving ? "Leaving..." : "Leave Group"}
+              </button>
             )}
           </div>
         ) : (

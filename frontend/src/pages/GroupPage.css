@@ -2,162 +2,189 @@
 /* ABOUTME: Dedicated study group view with participant list */
 
 .group-page {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
 }
 
 .group-page__loading,
 .group-page__error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    gap: 1rem;
 }
 
 .group-page__back-link {
-  display: inline-block;
-  color: #003366;
-  text-decoration: none;
-  font-size: 0.875rem;
-  margin-bottom: 1.5rem;
+    display: inline-block;
+    color: #003366;
+    text-decoration: none;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
 }
 
 .group-page__back-link:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 .group-page__card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
 .group-page__header {
-  background: #003366;
-  color: white;
-  padding: 1.5rem;
+    background: #003366;
+    color: white;
+    padding: 1.5rem;
 }
 
 .group-page__title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
 }
 
 .group-page__professor {
-  font-size: 1rem;
-  opacity: 0.9;
-  margin: 0;
+    font-size: 1rem;
+    opacity: 0.9;
+    margin: 0;
 }
 
 .group-page__details {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .group-page__detail {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1rem;
-  color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1rem;
+    color: #374151;
 }
 
 .group-page__icon {
-  font-size: 1.25rem;
-  width: 1.5rem;
-  text-align: center;
+    font-size: 1.25rem;
+    width: 1.5rem;
+    text-align: center;
 }
 
 .group-page__location-link {
-  color: #003366;
-  text-decoration: none;
+    color: #003366;
+    text-decoration: none;
 }
 
 .group-page__location-link:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 .group-page__participants {
-  padding: 1.5rem;
+    padding: 1.5rem;
 }
 
 .group-page__section-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 1rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 1rem 0;
 }
 
 .group-page__empty {
-  color: #6b7280;
-  font-size: 0.875rem;
-  text-align: center;
-  padding: 1rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+    text-align: center;
+    padding: 1rem;
 }
 
 .group-page__participant-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
 .group-page__participant {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem;
-  background: #f9fafb;
-  border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 8px;
 }
 
 .group-page__participant-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 .group-page__participant-name {
-  font-weight: 500;
-  color: #1f2937;
+    font-weight: 500;
+    color: #1f2937;
 }
 
 .group-page__participant-email {
-  font-size: 0.875rem;
-  color: #003366;
-  text-decoration: none;
+    font-size: 0.875rem;
+    color: #003366;
+    text-decoration: none;
 }
 
 .group-page__participant-email:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 .group-page__not-member {
-  padding: 2rem 1.5rem;
-  text-align: center;
-  color: #6b7280;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: #6b7280;
 }
 
 .group-page__join-link {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
-  background: #003366;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: 500;
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: #003366;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
 }
 
 .group-page__join-link:hover {
-  background: #002244;
+    background: #002244;
+}
+
+.group-page__leave-button {
+    display: block;
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    color: #dc2626;
+    border: 1px solid #dc2626;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background-color 0.15s,
+        color 0.15s;
+}
+
+.group-page__leave-button:hover:not(:disabled) {
+    background: #dc2626;
+    color: white;
+}
+
+.group-page__leave-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
