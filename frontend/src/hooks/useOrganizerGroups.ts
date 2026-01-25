@@ -140,12 +140,31 @@ export function useOrganizerGroups(): UseOrganizerGroupsResult {
         organizer_email: user.email.toLowerCase(),
       };
 
-      const { error: insertError } = await supabase
+      const { data: newGroup, error: insertError } = await supabase
         .from("study_groups")
-        .insert(studyGroupData);
+        .insert(studyGroupData)
+        .select("id")
+        .single();
 
       if (insertError) {
         throw new Error(insertError.message);
+      }
+
+      // Automatically add organizer as a participant
+      const { error: participantError } = await supabase
+        .from("participants")
+        .insert({
+          study_group_id: newGroup.id,
+          name: input.organizer_name || "Organizer",
+          email: user.email.toLowerCase(),
+        });
+
+      if (participantError) {
+        // Log but don't fail - the group was created successfully
+        console.error(
+          "Failed to add organizer as participant:",
+          participantError.message,
+        );
       }
 
       // Refetch to update the list
