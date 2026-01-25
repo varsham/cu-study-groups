@@ -1,10 +1,14 @@
 // ABOUTME: Dashboard component for organizers to manage their study groups
-// ABOUTME: Shows list of owned groups with view participants and delete actions
+// ABOUTME: Shows list of owned groups with edit, view participants, and delete actions
 
 import { useState, useCallback } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useOrganizerGroups } from "../hooks/useOrganizerGroups";
-import type { CreateStudyGroupInput } from "../hooks/useOrganizerGroups";
+import type {
+  CreateStudyGroupInput,
+  UpdateStudyGroupInput,
+} from "../hooks/useOrganizerGroups";
+import type { StudyGroupWithCounts } from "../lib/database.types";
 import { formatTimeRange, getRelativeDay } from "../lib/timezone";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { ErrorMessage } from "./ErrorMessage";
@@ -15,6 +19,10 @@ import {
   CreateStudyGroupForm,
   type StudyGroupFormData,
 } from "./CreateStudyGroupForm";
+import {
+  EditStudyGroupForm,
+  type EditStudyGroupFormData,
+} from "./EditStudyGroupForm";
 import "./OrganizerDashboard.css";
 
 export function OrganizerDashboard() {
@@ -25,11 +33,15 @@ export function OrganizerDashboard() {
     error,
     refetch,
     createGroup,
+    updateGroup,
     deleteGroup,
     getParticipants,
   } = useOrganizerGroups();
 
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editTarget, setEditTarget] = useState<StudyGroupWithCounts | null>(
+    null,
+  );
   const [deleteTarget, setDeleteTarget] = useState<{
     id: string;
     subject: string;
@@ -75,6 +87,26 @@ export function OrganizerDashboard() {
       setShowCreateForm(false);
     },
     [createGroup],
+  );
+
+  const handleEditGroup = useCallback(
+    async (formData: EditStudyGroupFormData) => {
+      if (!editTarget) return;
+      const input: UpdateStudyGroupInput = {
+        subject: formData.subject,
+        description: formData.description,
+        professor_name: formData.professor_name,
+        location: formData.location,
+        date: formData.date,
+        start_time: formData.start_time,
+        end_time: formData.end_time,
+        student_limit: formData.student_limit,
+        organizer_name: formData.organizer_name,
+      };
+      await updateGroup(editTarget.id, input);
+      setEditTarget(null);
+    },
+    [editTarget, updateGroup],
   );
 
   if (isLoading) {
@@ -173,6 +205,13 @@ export function OrganizerDashboard() {
               <div className="organizer-dashboard__card-actions">
                 <button
                   type="button"
+                  className="organizer-dashboard__action organizer-dashboard__action--edit"
+                  onClick={() => setEditTarget(group)}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
                   className="organizer-dashboard__action organizer-dashboard__action--view"
                   onClick={() =>
                     handleViewParticipants(group.id, group.subject)
@@ -219,6 +258,14 @@ export function OrganizerDashboard() {
           organizerEmail={user.email}
           onSubmit={handleCreateGroup}
           onCancel={() => setShowCreateForm(false)}
+        />
+      )}
+
+      {editTarget && (
+        <EditStudyGroupForm
+          group={editTarget}
+          onSubmit={handleEditGroup}
+          onCancel={() => setEditTarget(null)}
         />
       )}
     </div>

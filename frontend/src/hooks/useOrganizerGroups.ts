@@ -30,12 +30,25 @@ export interface CreateStudyGroupInput {
   organizer_email: string;
 }
 
+export interface UpdateStudyGroupInput {
+  subject: string;
+  description: string | null;
+  professor_name: string | null;
+  location: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  student_limit: number | null;
+  organizer_name: string | null;
+}
+
 interface UseOrganizerGroupsResult {
   groups: StudyGroupWithCounts[];
   isLoading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
   createGroup: (input: CreateStudyGroupInput) => Promise<void>;
+  updateGroup: (groupId: string, input: UpdateStudyGroupInput) => Promise<void>;
   deleteGroup: (groupId: string) => Promise<void>;
   getParticipants: (groupId: string) => Promise<Participant[]>;
 }
@@ -141,6 +154,43 @@ export function useOrganizerGroups(): UseOrganizerGroupsResult {
     [user?.email, fetchGroups],
   );
 
+  const updateGroup = useCallback(
+    async (groupId: string, input: UpdateStudyGroupInput) => {
+      if (!user?.email) {
+        throw new Error("You must be logged in to update a group");
+      }
+
+      // Combine date and time into ISO timestamps
+      const startDateTime = new Date(`${input.date}T${input.start_time}:00`);
+      const endDateTime = new Date(`${input.date}T${input.end_time}:00`);
+
+      const updateData = {
+        subject: input.subject,
+        description: input.description,
+        professor_name: input.professor_name,
+        location: input.location,
+        start_time: startDateTime.toISOString(),
+        end_time: endDateTime.toISOString(),
+        student_limit: input.student_limit,
+        organizer_name: input.organizer_name,
+      };
+
+      const { error: updateError } = await supabase
+        .from("study_groups")
+        .update(updateData)
+        .eq("id", groupId)
+        .eq("organizer_email", user.email.toLowerCase());
+
+      if (updateError) {
+        throw new Error(updateError.message);
+      }
+
+      // Refetch to update the list
+      await fetchGroups();
+    },
+    [user?.email, fetchGroups],
+  );
+
   const deleteGroup = useCallback(
     async (groupId: string) => {
       if (!user?.email) {
@@ -207,6 +257,7 @@ export function useOrganizerGroups(): UseOrganizerGroupsResult {
     error,
     refetch: fetchGroups,
     createGroup,
+    updateGroup,
     deleteGroup,
     getParticipants,
   };

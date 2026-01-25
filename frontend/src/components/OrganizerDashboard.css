@@ -175,14 +175,25 @@
         color 0.2s ease;
 }
 
-.organizer-dashboard__action--view {
+.organizer-dashboard__action--edit {
     background-color: #f0f4f8;
     border: 1px solid #003366;
     color: #003366;
 }
 
-.organizer-dashboard__action--view:hover {
+.organizer-dashboard__action--edit:hover {
     background-color: #003366;
+    color: #fff;
+}
+
+.organizer-dashboard__action--view {
+    background-color: #fff;
+    border: 1px solid #666;
+    color: #666;
+}
+
+.organizer-dashboard__action--view:hover {
+    background-color: #666;
     color: #fff;
 }
 
