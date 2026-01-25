@@ -1,4 +1,4 @@
-// ABOUTME: Authentication context for organizer magic link login
+// ABOUTME: Authentication context for organizer OTP login
 // ABOUTME: Provides auth state and methods across the application
 
 import {
@@ -16,7 +16,11 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  signInWithMagicLink: (email: string) => Promise<{ error: Error | null }>;
+  sendOtpCode: (email: string) => Promise<{ error: Error | null }>;
+  verifyOtpCode: (
+    email: string,
+    code: string,
+  ) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -53,12 +57,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
   }, []);
 
-  const signInWithMagicLink = useCallback(async (email: string) => {
+  const sendOtpCode = useCallback(async (email: string) => {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        // Use email type OTP (sends 6-digit code, not magic link)
+        shouldCreateUser: true,
       },
+    });
+
+    if (error) {
+      return { error: new Error(error.message) };
+    }
+
+    return { error: null };
+  }, []);
+
+  const verifyOtpCode = useCallback(async (email: string, code: string) => {
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: code,
+      type: "email",
     });
 
     if (error) {
@@ -76,7 +95,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     user,
     session,
     isLoading,
-    signInWithMagicLink,
+    sendOtpCode,
+    verifyOtpCode,
     signOut,
   };
 
