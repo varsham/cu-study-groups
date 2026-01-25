@@ -54,6 +54,7 @@ export function useStudyGroups(searchQuery: string = ""): UseStudyGroupsResult {
           return {
             id: group.id,
             subject: group.subject,
+            description: group.description,
             professor_name: group.professor_name,
             location: group.location,
             start_time: group.start_time,
@@ -168,7 +169,8 @@ export function useStudyGroups(searchQuery: string = ""): UseStudyGroupsResult {
           group.subject.toLowerCase().includes(query) ||
           group.location.toLowerCase().includes(query) ||
           (group.professor_name?.toLowerCase().includes(query) ?? false) ||
-          (group.organizer_name?.toLowerCase().includes(query) ?? false)
+          (group.organizer_name?.toLowerCase().includes(query) ?? false) ||
+          (group.description?.toLowerCase().includes(query) ?? false)
         );
       })
     : groups;

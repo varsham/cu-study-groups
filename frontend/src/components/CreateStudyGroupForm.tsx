@@ -1,102 +1,105 @@
 // ABOUTME: Form component for organizers to create new study groups
 // ABOUTME: Mirrors the Google Form fields for direct group creation
 
-import { useState, type FormEvent } from 'react'
-import './CreateStudyGroupForm.css'
+import { useState, type FormEvent } from "react";
+import "./CreateStudyGroupForm.css";
 
 const SUBJECTS = [
-  'Computer Science',
-  'Mathematics',
-  'Physics',
-  'Chemistry',
-  'Biology',
-  'Economics',
-  'History',
-  'English',
-  'Psychology',
-  'Philosophy',
-  'Political Science',
-  'Sociology',
-  'Other'
-]
+  "Computer Science",
+  "Mathematics",
+  "Physics",
+  "Chemistry",
+  "Biology",
+  "Economics",
+  "History",
+  "English",
+  "Psychology",
+  "Philosophy",
+  "Political Science",
+  "Sociology",
+  "Other",
+];
 
 interface CreateStudyGroupFormProps {
-  organizerEmail: string
-  onSubmit: (data: StudyGroupFormData) => Promise<void>
-  onCancel: () => void
+  organizerEmail: string;
+  onSubmit: (data: StudyGroupFormData) => Promise<void>;
+  onCancel: () => void;
 }
 
 export interface StudyGroupFormData {
-  subject: string
-  professor_name: string | null
-  location: string
-  date: string
-  start_time: string
-  end_time: string
-  student_limit: number | null
-  organizer_name: string | null
-  organizer_email: string
+  subject: string;
+  description: string | null;
+  professor_name: string | null;
+  location: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  student_limit: number | null;
+  organizer_name: string | null;
+  organizer_email: string;
 }
 
 export function CreateStudyGroupForm({
   organizerEmail,
   onSubmit,
-  onCancel
+  onCancel,
 }: CreateStudyGroupFormProps) {
-  const [subject, setSubject] = useState('')
-  const [subjectOther, setSubjectOther] = useState('')
-  const [professorName, setProfessorName] = useState('')
-  const [location, setLocation] = useState('')
-  const [date, setDate] = useState('')
-  const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
-  const [studentLimit, setStudentLimit] = useState('')
-  const [organizerName, setOrganizerName] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [subject, setSubject] = useState("");
+  const [subjectOther, setSubjectOther] = useState("");
+  const [description, setDescription] = useState("");
+  const [professorName, setProfessorName] = useState("");
+  const [location, setLocation] = useState("");
+  const [date, setDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [studentLimit, setStudentLimit] = useState("");
+  const [organizerName, setOrganizerName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
     // Validation
-    const finalSubject = subject === 'Other' ? subjectOther.trim() : subject
+    const finalSubject = subject === "Other" ? subjectOther.trim() : subject;
     if (!finalSubject) {
-      setError('Please select or enter a subject')
-      return
+      setError("Please select or enter a subject");
+      return;
     }
     if (!location.trim()) {
-      setError('Please enter a location')
-      return
+      setError("Please enter a location");
+      return;
     }
     if (!date) {
-      setError('Please select a date')
-      return
+      setError("Please select a date");
+      return;
     }
     if (!startTime) {
-      setError('Please select a start time')
-      return
+      setError("Please select a start time");
+      return;
     }
     if (!endTime) {
-      setError('Please select an end time')
-      return
+      setError("Please select an end time");
+      return;
     }
     if (startTime >= endTime) {
-      setError('End time must be after start time')
-      return
+      setError("End time must be after start time");
+      return;
     }
 
-    const parsedLimit = studentLimit ? parseInt(studentLimit, 10) : null
+    const parsedLimit = studentLimit ? parseInt(studentLimit, 10) : null;
     if (studentLimit && (isNaN(parsedLimit!) || parsedLimit! <= 0)) {
-      setError('Student limit must be a positive number')
-      return
+      setError("Student limit must be a positive number");
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       await onSubmit({
         subject: finalSubject,
+        description: description.trim() || null,
         professor_name: professorName.trim() || null,
         location: location.trim(),
         date,
@@ -104,17 +107,17 @@ export function CreateStudyGroupForm({
         end_time: endTime,
         student_limit: parsedLimit,
         organizer_name: organizerName.trim() || null,
-        organizer_email: organizerEmail
-      })
+        organizer_email: organizerEmail,
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create group')
-      setIsSubmitting(false)
+      setError(err instanceof Error ? err.message : "Failed to create group");
+      setIsSubmitting(false);
     }
-  }
+  };
 
   // Get tomorrow's date as minimum for the date picker
-  const today = new Date()
-  const minDate = today.toISOString().split('T')[0]
+  const today = new Date();
+  const minDate = today.toISOString().split("T")[0];
 
   return (
     <div className="create-form-overlay">
@@ -168,7 +171,7 @@ export function CreateStudyGroupForm({
             </select>
           </div>
 
-          {subject === 'Other' && (
+          {subject === "Other" && (
             <div className="create-form__field">
               <label htmlFor="subject-other" className="create-form__label">
                 Specify Subject <span className="create-form__required">*</span>
@@ -184,6 +187,24 @@ export function CreateStudyGroupForm({
               />
             </div>
           )}
+
+          <div className="create-form__field">
+            <label htmlFor="description" className="create-form__label">
+              Description
+            </label>
+            <textarea
+              id="description"
+              className="create-form__textarea"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g., Studying for Multivariable Calculus midterm, focusing on partial derivatives and multiple integrals"
+              rows={3}
+            />
+            <p className="create-form__hint">
+              Specify the course name (e.g., &quot;Multivariable Calculus&quot;
+              for Mathematics) and what you hope to accomplish.
+            </p>
+          </div>
 
           <div className="create-form__field">
             <label htmlFor="professor" className="create-form__label">
@@ -288,11 +309,11 @@ export function CreateStudyGroupForm({
               className="create-form__button create-form__button--submit"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Creating...' : 'Create Study Group'}
+              {isSubmitting ? "Creating..." : "Create Study Group"}
             </button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }

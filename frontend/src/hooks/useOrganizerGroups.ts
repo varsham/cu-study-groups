@@ -19,6 +19,7 @@ interface Participant {
 
 export interface CreateStudyGroupInput {
   subject: string;
+  description: string | null;
   professor_name: string | null;
   location: string;
   date: string;
@@ -79,6 +80,7 @@ export function useOrganizerGroups(): UseOrganizerGroupsResult {
           return {
             id: group.id,
             subject: group.subject,
+            description: group.description,
             professor_name: group.professor_name,
             location: group.location,
             start_time: group.start_time,
@@ -115,6 +117,7 @@ export function useOrganizerGroups(): UseOrganizerGroupsResult {
 
       const studyGroupData = {
         subject: input.subject,
+        description: input.description,
         professor_name: input.professor_name,
         location: input.location,
         start_time: startDateTime.toISOString(),

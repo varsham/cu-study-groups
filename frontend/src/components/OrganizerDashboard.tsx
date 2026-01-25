@@ -61,6 +61,7 @@ export function OrganizerDashboard() {
     async (formData: StudyGroupFormData) => {
       const input: CreateStudyGroupInput = {
         subject: formData.subject,
+        description: formData.description,
         professor_name: formData.professor_name,
         location: formData.location,
         date: formData.date,
@@ -135,6 +136,11 @@ export function OrganizerDashboard() {
                 {group.professor_name && (
                   <p className="organizer-dashboard__card-professor">
                     Prof. {group.professor_name}
+                  </p>
+                )}
+                {group.description && (
+                  <p className="organizer-dashboard__card-description">
+                    {group.description}
                   </p>
                 )}
               </div>

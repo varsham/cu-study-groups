@@ -29,6 +29,10 @@ export function StudyGroupCard({ group, onJoin }: StudyGroupCardProps) {
       </div>
 
       <div className="card-body">
+        {group.description && (
+          <p className="description">{group.description}</p>
+        )}
+
         <div className="info-row">
           <span className="icon">📅</span>
           <span className="value">{getRelativeDay(group.start_time)}</span>

@@ -54,6 +54,13 @@
     margin: 0;
 }
 
+.group-page__description {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin: 0.75rem 0 0 0;
+    line-height: 1.5;
+}
+
 .group-page__details {
     padding: 1.5rem;
     display: flex;

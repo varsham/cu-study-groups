@@ -17,13 +17,14 @@ const COLUMNS = {
   NAME: 1,
   SUBJECT: 2,
   SUBJECT_OTHER: 3,
-  DATE: 4,
-  LOCATION: 5,
-  START_TIME: 6,
-  END_TIME: 7,
-  STUDENT_LIMIT: 8,
-  EMAIL: 9,
-  PROFESSOR_NAME: 10
+  DESCRIPTION: 4,
+  DATE: 5,
+  LOCATION: 6,
+  START_TIME: 7,
+  END_TIME: 8,
+  STUDENT_LIMIT: 9,
+  EMAIL: 10,
+  PROFESSOR_NAME: 11
 };
 
 /**
@@ -111,6 +112,7 @@ function parseFormData(rowData) {
 
   return {
     subject: subject,
+    description: rowData[COLUMNS.DESCRIPTION] || null,
     professor_name: rowData[COLUMNS.PROFESSOR_NAME] || null,
     location: rowData[COLUMNS.LOCATION],
     start_time: startTime,

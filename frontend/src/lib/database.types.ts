@@ -16,6 +16,7 @@ export interface Database {
         Row: {
           id: string;
           subject: string;
+          description: string | null;
           professor_name: string | null;
           location: string;
           start_time: string;
@@ -29,6 +30,7 @@ export interface Database {
         Insert: {
           id?: string;
           subject: string;
+          description?: string | null;
           professor_name?: string | null;
           location: string;
           start_time: string;
@@ -42,6 +44,7 @@ export interface Database {
         Update: {
           id?: string;
           subject?: string;
+          description?: string | null;
           professor_name?: string | null;
           location?: string;
           start_time?: string;
@@ -124,6 +127,7 @@ export interface Database {
 export interface StudyGroupWithCounts {
   id: string;
   subject: string;
+  description: string | null;
   professor_name: string | null;
   location: string;
   start_time: string;

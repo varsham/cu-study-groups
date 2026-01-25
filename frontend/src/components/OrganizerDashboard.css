@@ -124,6 +124,13 @@
     color: #666;
 }
 
+.organizer-dashboard__card-description {
+    margin: 8px 0 0 0;
+    font-size: 0.875rem;
+    color: #555;
+    line-height: 1.4;
+}
+
 .organizer-dashboard__card-details {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

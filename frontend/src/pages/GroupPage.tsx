@@ -14,6 +14,7 @@ import "./GroupPage.css";
 interface StudyGroup {
   id: string;
   subject: string;
+  description: string | null;
   professor_name: string | null;
   location: string;
   start_time: string;
@@ -211,6 +212,9 @@ export function GroupPage() {
             <p className="group-page__professor">
               Prof. {group.professor_name}
             </p>
+          )}
+          {group.description && (
+            <p className="group-page__description">{group.description}</p>
           )}
         </div>
 

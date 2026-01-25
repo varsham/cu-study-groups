@@ -22,6 +22,7 @@ A study group management system for Columbia University students. Students can c
 | Name | `organizer_name` | Optional (if empty, don't display) |
 | Study Group Subject | `subject` | Dropdown + "Other" option |
 | If Other, enter subject | `subject` | Override if "Other" selected |
+| Description | `description` | Optional, specify course name and goals |
 | Professor Name | `professor_name` | Optional |
 | Date | `start_time` (date part) | Required |
 | Location | `location` | Required |
@@ -267,6 +268,7 @@ WEBHOOK_SECRET=  # optional, for additional webhook security
 ### study_groups
 - `id` (uuid, PK)
 - `subject` (text, required)
+- `description` (text, nullable) - course name and study goals
 - `professor_name` (text, nullable)
 - `location` (text, required)
 - `start_time` (timestamptz, required)
