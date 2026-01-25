@@ -301,7 +301,7 @@ describe("LoginForm", () => {
         expect(mockSendOtpCode).toHaveBeenCalledWith("test@columbia.edu");
         expect(
           screen.getByText(
-            "Code invalid or expired. We've sent a new code to your email.",
+            "Code invalid or already used. We've sent a new code to your email.",
           ),
         ).toBeInTheDocument();
       });

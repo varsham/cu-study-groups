@@ -58,17 +58,18 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     );
 
     if (verifyError) {
-      // Auto-resend a new code on failure (expired or invalid)
+      // Auto-resend a new code on failure (expired, invalid, or already used)
       setCode("");
       const { error: resendError } = await sendOtpCode(
         email.toLowerCase().trim(),
       );
 
       if (resendError) {
-        setError("Verification failed. Please try again later.");
+        // Rate limit or other error - show the actual error
+        setError(`Code invalid or already used. ${resendError.message}`);
       } else {
         setInfoMessage(
-          "Code invalid or expired. We've sent a new code to your email.",
+          "Code invalid or already used. We've sent a new code to your email.",
         );
       }
       setIsSubmitting(false);
