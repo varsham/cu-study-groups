@@ -8,6 +8,7 @@ import { Header } from "./components/Header";
 import { HomePage } from "./pages/HomePage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { GroupPage } from "./pages/GroupPage";
+import { AuthCallbackPage } from "./pages/AuthCallbackPage";
 import "./App.css";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/group/:groupId" element={<GroupPage />} />
+              <Route path="/auth/callback" element={<AuthCallbackPage />} />
             </Routes>
           </main>
         </UserEmailProvider>

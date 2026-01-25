@@ -1,0 +1,74 @@
+/* ABOUTME: Styles for the AuthCallbackPage component */
+/* ABOUTME: Centered status messages for magic link verification */
+
+.auth-callback {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-callback__content {
+  text-align: center;
+  max-width: 400px;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-callback__icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.auth-callback__content--success .auth-callback__icon {
+  color: #2e7d32;
+}
+
+.auth-callback__content--info .auth-callback__icon {
+  color: #003366;
+}
+
+.auth-callback__content--warning .auth-callback__icon {
+  color: #f57c00;
+}
+
+.auth-callback__content--error .auth-callback__icon {
+  color: #d32f2f;
+}
+
+.auth-callback__title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.auth-callback__message {
+  margin: 0 0 1.5rem 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+.auth-callback__button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  background-color: #003366;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.auth-callback__button:hover {
+  background-color: #002244;
+}
+
+.auth-callback__button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.3);
+}
