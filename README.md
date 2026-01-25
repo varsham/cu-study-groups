@@ -5,9 +5,9 @@ A web application for Columbia University students to create, discover, and join
 ## Features
 
 - **Browse Study Groups**: View all available study groups with search and filter
-- **Join Groups**: Columbia students can join groups with their @columbia.edu email
-- **Create Groups**: Submit new study groups via Google Form
-- **Organizer Dashboard**: Manage your study groups and view participants
+- **Join Groups**: Columbia students can join groups with their @columbia.edu or @barnard.edu email
+- **Create Groups**: Log in and create study groups directly from the dashboard (no Google Form required)
+- **Organizer Dashboard**: Manage your study groups, create new ones, and view participants
 - **Real-time Updates**: See new groups and participants instantly
 - **Email Notifications**: Get notified when someone joins your group
 - **Automatic Cleanup**: Expired groups are automatically removed
@@ -17,13 +17,17 @@ A web application for Columbia University students to create, discover, and join
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │   Google Form   │────▶│  Apps Script    │────▶│    Supabase     │
-│   (Create)      │     │  (Webhook)      │     │   (Database)    │
+│   (Optional)    │     │  (Webhook)      │     │   (Database)    │
 └─────────────────┘     └─────────────────┘     └────────┬────────┘
                                                          │
                         ┌─────────────────┐              │
-                        │  React Frontend │◀─────────────┘
-                        │  (Browse/Join)  │
+                        │  React Frontend │◀────────────▶│
+                        │ (Browse/Create/ │              │
+                        │     Join)       │              │
                         └─────────────────┘
+
+Students can create groups directly from the dashboard after logging in,
+or optionally use the Google Form which syncs via webhook.
 ```
 
 ## Project Structure
@@ -72,7 +76,11 @@ cp .env.example .env.local
 npm run dev
 ```
 
-### 3. Google Apps Script Setup
+### 3. Google Apps Script Setup (Optional)
+
+The Google Form integration is optional. Students can create groups directly from the dashboard after logging in.
+
+If you want to also support Google Form submissions:
 
 1. Create a new Google Apps Script project
 2. Copy contents from `google-apps-script/webhook.gs`
@@ -93,47 +101,13 @@ npx supabase secrets set GMAIL_USER=your-email@gmail.com
 npx supabase secrets set GMAIL_APP_PASSWORD=your-app-password
 ```
 
-#### B. Auth Emails (Magic Links)
+#### B. Email Templates
 
-Configure SMTP in Supabase Dashboard for magic link authentication:
-
-1. Go to **https://supabase.com/dashboard/project/YOUR_PROJECT_REF/auth/smtp**
-2. Enable **Custom SMTP**
-3. Enter these settings:
-
-| Setting | Value |
-|---------|-------|
-| Host | `smtp.gmail.com` |
-| Port | `587` |
-| User | `your-email@gmail.com` (full email address) |
-| Password | Your Gmail App Password (see below) |
-| Sender email | `your-email@gmail.com` |
-| Sender name | `CU Study Groups` |
-
-#### Creating a Gmail App Password
-
-Gmail requires an "App Password" for SMTP access (your regular password won't work):
-
-1. **Enable 2-Step Verification** (required first):
-   - Go to https://myaccount.google.com/security
-   - Enable "2-Step Verification" if not already enabled
-
-2. **Create App Password**:
-   - Go to https://myaccount.google.com/apppasswords
-   - Click "Create a new app password"
-   - Name it "Supabase" or "CU Study Groups"
-   - Click "Create"
-   - Copy the 16-character password (e.g., `xxxx xxxx xxxx xxxx`)
-
-3. **Use in Supabase**:
-   - Paste the password **without spaces** (e.g., `xxxxyyyyzzzzwwww`)
-   - Use your full email as the username
-
-**Troubleshooting "Username and password not accepted"**:
-- Ensure you're using an App Password, not your regular Gmail password
-- Remove any spaces from the App Password
-- Verify 2-Step Verification is enabled on the Google account
-- Make sure the email is a Google/Gmail account (some university emails use different providers)
+Create email templates in Supabase Edge Functions:
+```bash
+npx supabase functions new join-notification
+npx supabase functions new reminder
+```
 
 #### C. Configure Auth Redirect URLs
 
@@ -233,7 +207,7 @@ cd frontend && npm run build
 - **Backend**: Supabase (PostgreSQL, Auth, Edge Functions, Realtime)
 - **Testing**: Vitest, Testing Library, pytest
 - **Email**: Gmail SMTP via Edge Functions
-- **Form**: Google Forms + Apps Script
+- **Form**: Built-in dashboard form (Google Forms + Apps Script optional)
 
 ## License
 

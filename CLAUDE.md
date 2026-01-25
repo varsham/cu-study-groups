@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-A study group management system for Columbia University students. Students submit study groups via Google Form, which syncs to Supabase. A React frontend displays available groups and allows students to join.
+A study group management system for Columbia University students. Students can create study groups directly through the app after logging in with their Columbia email, or via Google Form (which syncs to Supabase). A React frontend displays available groups and allows students to join.
 
 ## Tech Stack
 
@@ -291,12 +291,13 @@ WEBHOOK_SECRET=  # optional, for additional webhook security
 
 ### study_groups
 - SELECT: Public (anyone can view)
-- INSERT: Via webhook only (service role)
+- INSERT: Authenticated users with @columbia.edu or @barnard.edu email (must match organizer_email), OR service role (for Google Form webhook)
 - DELETE: Organizer only (authenticated, email matches organizer_email)
+- UPDATE: Organizer only (authenticated, email matches organizer_email)
 
 ### participants
 - SELECT: Public for names only; organizers can see emails for their groups
-- INSERT: Public (with @columbia.edu email validation)
+- INSERT: Public (with @columbia.edu or @barnard.edu email validation)
 - DELETE: Cascade from study_groups
 
 ---
