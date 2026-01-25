@@ -184,7 +184,7 @@ describe("LoginForm", () => {
       await goToCodeStep();
 
       fireEvent.change(screen.getByLabelText("Verification Code"), {
-        target: { value: "12345" },
+        target: { value: "1234567" },
       });
 
       expect(
@@ -192,11 +192,11 @@ describe("LoginForm", () => {
       ).toBeDisabled();
     });
 
-    it("enables verify button with valid 6-digit code", async () => {
+    it("enables verify button with valid 8-digit code", async () => {
       await goToCodeStep();
 
       fireEvent.change(screen.getByLabelText("Verification Code"), {
-        target: { value: "123456" },
+        target: { value: "12345678" },
       });
 
       expect(
@@ -219,14 +219,14 @@ describe("LoginForm", () => {
       await goToCodeStep();
 
       fireEvent.change(screen.getByLabelText("Verification Code"), {
-        target: { value: "123456" },
+        target: { value: "12345678" },
       });
       fireEvent.click(screen.getByRole("button", { name: /verify code/i }));
 
       await waitFor(() => {
         expect(mockVerifyOtpCode).toHaveBeenCalledWith(
           "test@columbia.edu",
-          "123456",
+          "12345678",
         );
       });
     });
@@ -247,7 +247,7 @@ describe("LoginForm", () => {
       });
 
       fireEvent.change(screen.getByLabelText("Verification Code"), {
-        target: { value: "123456" },
+        target: { value: "12345678" },
       });
       fireEvent.click(screen.getByRole("button", { name: /verify code/i }));
 
@@ -265,7 +265,7 @@ describe("LoginForm", () => {
       mockSendOtpCode.mockClear();
 
       fireEvent.change(screen.getByLabelText("Verification Code"), {
-        target: { value: "123456" },
+        target: { value: "12345678" },
       });
       fireEvent.click(screen.getByRole("button", { name: /verify code/i }));
 
@@ -288,7 +288,7 @@ describe("LoginForm", () => {
 
       const input = screen.getByLabelText("Verification Code");
       fireEvent.change(input, {
-        target: { value: "123456" },
+        target: { value: "12345678" },
       });
       fireEvent.click(screen.getByRole("button", { name: /verify code/i }));
 
@@ -331,7 +331,7 @@ describe("LoginForm", () => {
       await goToCodeStep();
 
       fireEvent.change(screen.getByLabelText("Verification Code"), {
-        target: { value: "123456" },
+        target: { value: "12345678" },
       });
       fireEvent.click(screen.getByRole("button", { name: /verify code/i }));
 

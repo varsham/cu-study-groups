@@ -23,7 +23,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
   const emailError = email ? getEmailError(email) : null;
   const isEmailValid = validateColumbiaEmail(email);
-  const isCodeValid = code.length === 6 && /^\d+$/.test(code);
+  const isCodeValid = code.length === 8 && /^\d+$/.test(code);
 
   const handleSendCode = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -109,7 +109,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       <div className="login-form">
         <h2 className="login-form__title">Enter Verification Code</h2>
         <p className="login-form__subtitle">
-          We sent a 6-digit code to <strong>{email}</strong>
+          We sent an 8-digit code to <strong>{email}</strong>
         </p>
 
         <form onSubmit={handleVerifyCode} className="login-form__form">
@@ -122,10 +122,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"
-              maxLength={6}
+              maxLength={8}
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-              placeholder="123456"
+              placeholder="12345678"
               className="login-form__input login-form__input--code"
               required
               disabled={isSubmitting}
