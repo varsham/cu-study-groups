@@ -1,7 +1,7 @@
 // ABOUTME: Main homepage displaying all available study groups
 // ABOUTME: Includes search, filtering, and join functionality
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useUserEmail } from "../contexts/UserEmailContext";
@@ -17,18 +17,11 @@ import "./HomePage.css";
 
 export function HomePage() {
   const navigate = useNavigate();
-  const { user, isLoading: authLoading } = useAuth();
+  const { user } = useAuth();
   const { setUserEmail } = useUserEmail();
   const [searchQuery, setSearchQuery] = useState("");
   const { groups, isLoading, error, refetch, joinGroup } =
     useStudyGroups(searchQuery);
-
-  // Redirect logged-in organizers to dashboard
-  useEffect(() => {
-    if (!authLoading && user) {
-      navigate("/dashboard", { replace: true });
-    }
-  }, [user, authLoading, navigate]);
 
   const [joinTarget, setJoinTarget] = useState<StudyGroupWithCounts | null>(
     null,
@@ -117,6 +110,7 @@ export function HomePage() {
         <JoinModal
           groupId={joinTarget.id}
           groupSubject={joinTarget.subject}
+          userEmail={user?.email}
           onClose={() => setJoinTarget(null)}
           onJoin={handleJoin}
         />

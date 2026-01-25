@@ -8,6 +8,7 @@ import "./JoinModal.css";
 interface JoinModalProps {
   groupId: string;
   groupSubject: string;
+  userEmail?: string | null;
   onClose: () => void;
   onJoin: (data: { name: string; email: string }) => Promise<void>;
 }
@@ -15,13 +16,14 @@ interface JoinModalProps {
 export function JoinModal({
   groupId: _groupId,
   groupSubject,
+  userEmail,
   onClose,
   onJoin,
 }: JoinModalProps) {
   // Note: groupId is passed for interface consistency but join is handled by parent
   void _groupId;
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(userEmail || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
