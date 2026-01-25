@@ -197,12 +197,12 @@ export function CreateStudyGroupForm({
               className="create-form__textarea"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g., Studying for Multivariable Calculus midterm, focusing on partial derivatives and multiple integrals"
+              placeholder="e.g., APMA E2000 Multivariable Calculus - Studying for midterm, focusing on partial derivatives and multiple integrals"
               rows={3}
             />
             <p className="create-form__hint">
-              Specify the course name (e.g., &quot;Multivariable Calculus&quot;
-              for Mathematics) and what you hope to accomplish.
+              Include the course identifier (e.g., APMA E2000) and what you hope
+              to accomplish.
             </p>
           </div>
 
