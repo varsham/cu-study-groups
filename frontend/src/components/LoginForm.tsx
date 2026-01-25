@@ -181,6 +181,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     );
   }
 
+  const handleSkipToCode = () => {
+    if (!isEmailValid) return;
+    setStep("code");
+    setError(null);
+    setInfoMessage(null);
+  };
+
   return (
     <div className="login-form">
       <h2 className="login-form__title">Organizer Login</h2>
@@ -228,6 +235,17 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           {isSubmitting ? "Sending..." : "Send Verification Code"}
         </button>
       </form>
+
+      <div className="login-form__actions">
+        <button
+          type="button"
+          className="login-form__link-button"
+          onClick={handleSkipToCode}
+          disabled={!isEmailValid || isSubmitting}
+        >
+          Already have a code?
+        </button>
+      </div>
 
       <p className="login-form__note">
         Sign in with your Columbia email to create and manage study groups.

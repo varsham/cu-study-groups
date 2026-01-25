@@ -147,6 +147,34 @@ describe("LoginForm", () => {
         expect(screen.getByText("Enter Verification Code")).toBeInTheDocument();
       });
     });
+
+    it("disables 'Already have a code?' when email is invalid", () => {
+      render(<LoginForm />);
+
+      expect(screen.getByText("Already have a code?")).toBeDisabled();
+
+      fireEvent.change(screen.getByLabelText("Columbia Email"), {
+        target: { value: "test@gmail.com" },
+      });
+
+      expect(screen.getByText("Already have a code?")).toBeDisabled();
+    });
+
+    it("allows skipping to code entry with valid email", () => {
+      render(<LoginForm />);
+
+      fireEvent.change(screen.getByLabelText("Columbia Email"), {
+        target: { value: "test@columbia.edu" },
+      });
+
+      expect(screen.getByText("Already have a code?")).not.toBeDisabled();
+
+      fireEvent.click(screen.getByText("Already have a code?"));
+
+      expect(screen.getByText("Enter Verification Code")).toBeInTheDocument();
+      expect(screen.getByLabelText("Verification Code")).toBeInTheDocument();
+      expect(mockSendOtpCode).not.toHaveBeenCalled();
+    });
   });
 
   describe("Code Step", () => {
