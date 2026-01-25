@@ -1,45 +1,45 @@
 // ABOUTME: Login form component for organizer magic link authentication
 // ABOUTME: Sends magic link to Columbia email for dashboard access
 
-import { useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import { validateColumbiaEmail, getEmailError } from '../lib/validation'
-import './LoginForm.css'
+import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { validateColumbiaEmail, getEmailError } from "../lib/validation";
+import "./LoginForm.css";
 
 interface LoginFormProps {
-  onSuccess?: () => void
+  onSuccess?: () => void;
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-  const { signInWithMagicLink } = useAuth()
-  const [email, setEmail] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+  const { signInWithMagicLink } = useAuth();
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const emailError = email ? getEmailError(email) : null
-  const isValid = validateColumbiaEmail(email)
+  const emailError = email ? getEmailError(email) : null;
+  const isValid = validateColumbiaEmail(email);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!isValid || isSubmitting) return
+    e.preventDefault();
+    if (!isValid || isSubmitting) return;
 
-    setIsSubmitting(true)
-    setError(null)
+    setIsSubmitting(true);
+    setError(null);
 
     const { error: signInError } = await signInWithMagicLink(
-      email.toLowerCase().trim()
-    )
+      email.toLowerCase().trim(),
+    );
 
     if (signInError) {
-      setError(signInError.message)
-      setIsSubmitting(false)
+      setError(signInError.message);
+      setIsSubmitting(false);
     } else {
-      setSuccess(true)
-      setIsSubmitting(false)
-      onSuccess?.()
+      setSuccess(true);
+      setIsSubmitting(false);
+      onSuccess?.();
     }
-  }
+  };
 
   if (success) {
     return (
@@ -65,7 +65,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           the email to access your dashboard.
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -86,7 +86,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your-uni@columbia.edu"
-            className={`login-form__input ${emailError ? 'error' : ''}`}
+            className={`login-form__input ${emailError ? "error" : ""}`}
             required
             disabled={isSubmitting}
             autoFocus
@@ -99,7 +99,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         </div>
 
         {error && (
-          <p className="login-form__error login-form__error--submit" role="alert">
+          <p
+            className="login-form__error login-form__error--submit"
+            role="alert"
+          >
             {error}
           </p>
         )}
@@ -109,13 +112,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           className="login-form__button"
           disabled={!isValid || isSubmitting}
         >
-          {isSubmitting ? 'Sending...' : 'Send Magic Link'}
+          {isSubmitting ? "Sending..." : "Send Magic Link"}
         </button>
       </form>
 
       <p className="login-form__note">
-        Only organizers who created study groups can access the dashboard.
+        Sign in with your Columbia email to create and manage study groups.
       </p>
     </div>
-  )
+  );
 }

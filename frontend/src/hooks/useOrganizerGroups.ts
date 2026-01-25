@@ -55,7 +55,7 @@ export function useOrganizerGroups(): UseOrganizerGroupsResult {
     try {
       setError(null);
 
-      // Fetch study groups owned by this organizer
+      // Fetch study groups owned by this organizer (case-insensitive match)
       const { data, error: fetchError } = await supabase
         .from("study_groups")
         .select(
@@ -64,7 +64,7 @@ export function useOrganizerGroups(): UseOrganizerGroupsResult {
           participants:participants(count)
         `,
         )
-        .eq("organizer_email", user.email.toLowerCase())
+        .ilike("organizer_email", user.email.toLowerCase())
         .order("start_time", { ascending: true });
 
       if (fetchError) {
